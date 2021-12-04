@@ -35,8 +35,8 @@ class CustomerDirectDebitBuilder
     }
 
     public function createInstance(
-        string $creditorFinInstBIC,
-        string $creditorIBAN,
+        string $creditorFinInstBic,
+        string $creditorIban,
         string $creditorName,
         string $creditorIdentNumber,
         string $executionDate,
@@ -161,7 +161,7 @@ class CustomerDirectDebitBuilder
         $xmlCdtrAcct->appendChild($xmlId);
 
         $xmlIBAN = $this->instance->createElement('IBAN');
-        $xmlIBAN->nodeValue = $creditorIBAN;
+        $xmlIBAN->nodeValue = $creditorIban;
         $xmlId->appendChild($xmlIBAN);
 
         $xmlCdtrAgt = $this->instance->createElement('CdtrAgt');
@@ -171,7 +171,7 @@ class CustomerDirectDebitBuilder
         $xmlCdtrAgt->appendChild($xmlFinInstnId);
 
         $xmlBIC = $this->instance->createElement('BIC');
-        $xmlBIC->nodeValue = $creditorFinInstBIC;
+        $xmlBIC->nodeValue = $creditorFinInstBic;
         $xmlFinInstnId->appendChild($xmlBIC);
 
         $xmlChrgBr = $this->instance->createElement('ChrgBr');
