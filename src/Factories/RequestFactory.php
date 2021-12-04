@@ -1155,7 +1155,7 @@ abstract class RequestFactory
                             ->addProduct('Ebics client PHP', 'de')
                             ->addOrderDetails(function (OrderDetailsBuilder $orderDetailsBuilder) {
                                 $this
-                                    ->addOrderType($orderDetailsBuilder, 'CCT')
+                                    ->addOrderType($orderDetailsBuilder, 'CIP')
                                     ->addStandardOrderParams();
                             })
                             ->addBankPubKeyDigests(
