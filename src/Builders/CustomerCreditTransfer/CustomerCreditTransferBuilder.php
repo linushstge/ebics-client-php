@@ -204,12 +204,6 @@ class CustomerCreditTransferBuilder
         $xmlPmtId = $this->instance->createElement('PmtId');
         $xmlCdtTrfTxInf->appendChild($xmlPmtId);
 
-        $xmlInstrId = $this->instance->createElement('InstrId');
-        $xmlInstrId->nodeValue = $this->randomService->uniqueIdWithDate(
-            'pii' . str_pad((string)$nbOfTxs, 2, '0')
-        );
-        $xmlPmtId->appendChild($xmlInstrId);
-
         $xmlEndToEndId = $this->instance->createElement('EndToEndId');
         $xmlEndToEndId->nodeValue = $endToendId;
         $xmlPmtId->appendChild($xmlEndToEndId);
