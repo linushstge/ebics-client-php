@@ -37,7 +37,11 @@ class CustomerDirectDebitBuilder
     public function createInstance(
         string $creditorFinInstBIC,
         string $creditorIBAN,
-        string $creditorName
+        string $creditorName,
+        string $creditorIdentNumber,
+        string $executionDate,
+        string $msgId = null,
+        string $paymentReference = null
     ): CustomerDirectDebitBuilder {
         $this->instance = new CustomerDirectDebit();
         $now = new DateTime();
@@ -66,6 +70,9 @@ class CustomerDirectDebitBuilder
 
         $xmlMsgId = $this->instance->createElement('MsgId');
         $xmlMsgId->nodeValue = $this->randomService->uniqueIdWithDate('msg');
+        if($msgId) {
+            $xmlMsgId->nodeValue = $msgId;
+        }
         $xmlGrpHdr->appendChild($xmlMsgId);
 
         $xmlMsgId = $this->instance->createElement('CreDtTm');
@@ -92,11 +99,18 @@ class CustomerDirectDebitBuilder
 
         $xmlPmtInfId = $this->instance->createElement('PmtInfId');
         $xmlPmtInfId->nodeValue = $this->randomService->uniqueIdWithDate('pmt');
+        if($paymentReference) {
+            $xmlPmtInfId->nodeValue = $paymentReference;
+        }
         $xmlPmtInf->appendChild($xmlPmtInfId);
 
         $xmlPmtMtd = $this->instance->createElement('PmtMtd');
         $xmlPmtMtd->nodeValue = 'DD';
         $xmlPmtInf->appendChild($xmlPmtMtd);
+
+        $xmlBtchBookg = $this->instance->createElement('BtchBookg');
+        $xmlBtchBookg->nodeValue = 'false';
+        $xmlPmtInf->appendChild($xmlBtchBookg);
 
         $xmlNbOfTxs = $this->instance->createElement('NbOfTxs');
         $xmlNbOfTxs->nodeValue = '0';
@@ -124,11 +138,13 @@ class CustomerDirectDebitBuilder
         $xmlLclInstrm->appendChild($xmlCd);
 
         $xmlSeqTp = $this->instance->createElement('SeqTp');
-        $xmlSeqTp->nodeValue = 'FRST';
+        $xmlSeqTp->nodeValue = 'RCUR';
+
         $xmlPmtTpInf->appendChild($xmlSeqTp);
 
         $xmlReqdColltnDt = $this->instance->createElement('ReqdColltnDt');
-        $xmlReqdColltnDt->nodeValue = $now->format('Y-m-d');
+        $xmlReqdColltnDt->nodeValue = $executionDate;
+
         $xmlPmtInf->appendChild($xmlReqdColltnDt);
 
         $xmlCdtr = $this->instance->createElement('Cdtr');
@@ -162,6 +178,29 @@ class CustomerDirectDebitBuilder
         $xmlChrgBr->nodeValue = 'SLEV';
         $xmlPmtInf->appendChild($xmlChrgBr);
 
+        $xmlCdtrSchmeId = $this->instance->createElement('CdtrSchmeId');
+        $xmlPmtInf->appendChild($xmlCdtrSchmeId);
+
+        $xmlCdtrSchmeIdId = $this->instance->createElement('Id');
+        $xmlCdtrSchmeId->appendChild($xmlCdtrSchmeIdId);
+
+        $xmlCdtrSchmePrvtId = $this->instance->createElement('PrvtId');
+        $xmlCdtrSchmeIdId->appendChild($xmlCdtrSchmePrvtId);
+
+        $xmlCdtrSchmeIdIdPrvtIdOthr = $this->instance->createElement('Othr');
+        $xmlCdtrSchmePrvtId->appendChild($xmlCdtrSchmeIdIdPrvtIdOthr);
+
+        $xmlCdtrSchmeOthrId = $this->instance->createElement('Id');
+        $xmlCdtrSchmeOthrId->nodeValue = $creditorIdentNumber;
+        $xmlCdtrSchmeIdIdPrvtIdOthr->appendChild($xmlCdtrSchmeOthrId);
+
+        $xmlCdtrSchmeSchmeNm = $this->instance->createElement('SchmeNm');
+        $xmlCdtrSchmeIdIdPrvtIdOthr->appendChild($xmlCdtrSchmeSchmeNm);
+
+        $xmlCdtrSchmePrtry = $this->instance->createElement('Prtry');
+        $xmlCdtrSchmePrtry->nodeValue = 'SEPA';
+        $xmlCdtrSchmeSchmeNm->appendChild($xmlCdtrSchmePrtry);
+
         return $this;
     }
 
@@ -171,7 +210,10 @@ class CustomerDirectDebitBuilder
         string $debitorName,
         float $amount,
         string $currency,
-        string $purpose
+        string $purpose,
+        string $endToEndId,
+        string $mandateReference,
+        string $signedAt
     ): CustomerDirectDebitBuilder {
         $xpath = $this->prepareXPath($this->instance);
         $nbOfTxsList = $xpath->query('//CstmrDrctDbtInitn/PmtInf/NbOfTxs');
@@ -198,9 +240,9 @@ class CustomerDirectDebitBuilder
         $xmlPmtId->appendChild($xmlInstrId);
 
         $xmlEndToEndId = $this->instance->createElement('EndToEndId');
-        $xmlEndToEndId->nodeValue = $this->randomService->uniqueIdWithDate(
-            'pete' . str_pad((string)$nbOfTxs, 2, '0')
-        );
+        $xmlEndToEndId->nodeValue = $endToEndId;
+
+
         $xmlPmtId->appendChild($xmlEndToEndId);
 
         $xmlInstdAmt = $this->instance->createElement('InstdAmt');
@@ -215,11 +257,13 @@ class CustomerDirectDebitBuilder
         $xmlDrctDbtTx->appendChild($xmlMndtRltdInf);
 
         $xmlMndtId = $this->instance->createElement('MndtId');
-        $xmlMndtId->nodeValue = '1';
+        $xmlMndtId->nodeValue = $mandateReference;
+
         $xmlMndtRltdInf->appendChild($xmlMndtId);
 
         $xmlDtOfSgntr = $this->instance->createElement('DtOfSgntr');
-        $xmlDtOfSgntr->nodeValue = $reqdColltnDt;
+        $xmlDtOfSgntr->nodeValue = $signedAt;
+
         $xmlMndtRltdInf->appendChild($xmlDtOfSgntr);
 
         $xmlDbtrAgt = $this->instance->createElement('DbtrAgt');

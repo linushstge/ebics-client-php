@@ -35,9 +35,11 @@ class CustomerCreditTransferBuilder
     }
 
     public function createInstance(
-        string $debitorFinInstBIC,
-        string $debitorIBAN,
-        string $debitorName
+        string $debtorFinInstBic,
+        string $debtorIban,
+        string $debtorName,
+        string $msgId = null,
+        string $paymentReference = null
     ): CustomerCreditTransferBuilder {
         $this->instance = new CustomerCreditTransfer();
         $now = new DateTime();
@@ -66,6 +68,10 @@ class CustomerCreditTransferBuilder
 
         $xmlMsgId = $this->instance->createElement('MsgId');
         $xmlMsgId->nodeValue = $this->randomService->uniqueIdWithDate('msg');
+        if($msgId) {
+            $xmlMsgId->nodeValue = $msgId;
+        }
+
         $xmlGrpHdr->appendChild($xmlMsgId);
 
         $xmlMsgId = $this->instance->createElement('CreDtTm');
@@ -84,7 +90,7 @@ class CustomerCreditTransferBuilder
         $xmlGrpHdr->appendChild($xmlInitgPty);
 
         $xmlNm = $this->instance->createElement('Nm');
-        $xmlNm->nodeValue = $debitorName;
+        $xmlNm->nodeValue = $debtorName;
         $xmlInitgPty->appendChild($xmlNm);
 
         $xmlPmtInf = $this->instance->createElement('PmtInf');
@@ -92,11 +98,19 @@ class CustomerCreditTransferBuilder
 
         $xmlPmtInfId = $this->instance->createElement('PmtInfId');
         $xmlPmtInfId->nodeValue = $this->randomService->uniqueIdWithDate('pmt');
+        if($paymentReference) {
+            $xmlPmtInfId->nodeValue = $paymentReference;
+        }
+
         $xmlPmtInf->appendChild($xmlPmtInfId);
 
         $xmlPmtMtd = $this->instance->createElement('PmtMtd');
         $xmlPmtMtd->nodeValue = 'TRF';
         $xmlPmtInf->appendChild($xmlPmtMtd);
+
+        $xmlBtchBookg = $this->instance->createElement('BtchBookg');
+        $xmlBtchBookg->nodeValue = 'false';
+        $xmlPmtInf->appendChild($xmlBtchBookg);
 
         $xmlNbOfTxs = $this->instance->createElement('NbOfTxs');
         $xmlNbOfTxs->nodeValue = '0';
@@ -124,7 +138,7 @@ class CustomerCreditTransferBuilder
         $xmlPmtInf->appendChild($xmlDbtr);
 
         $xmlNm = $this->instance->createElement('Nm');
-        $xmlNm->nodeValue = $debitorName;
+        $xmlNm->nodeValue = $debtorName;
         $xmlDbtr->appendChild($xmlNm);
 
         $xmlDbtrAcct = $this->instance->createElement('DbtrAcct');
@@ -134,7 +148,7 @@ class CustomerCreditTransferBuilder
         $xmlDbtrAcct->appendChild($xmlId);
 
         $xmlIBAN = $this->instance->createElement('IBAN');
-        $xmlIBAN->nodeValue = $debitorIBAN;
+        $xmlIBAN->nodeValue = $debtorIban;
         $xmlId->appendChild($xmlIBAN);
 
         $xmlDbtrAgt = $this->instance->createElement('DbtrAgt');
@@ -144,7 +158,7 @@ class CustomerCreditTransferBuilder
         $xmlDbtrAgt->appendChild($xmlFinInstnId);
 
         $xmlBIC = $this->instance->createElement('BIC');
-        $xmlBIC->nodeValue = $debitorFinInstBIC;
+        $xmlBIC->nodeValue = $debtorFinInstBic;
         $xmlFinInstnId->appendChild($xmlBIC);
 
         $xmlChrgBr = $this->instance->createElement('ChrgBr');
@@ -160,7 +174,8 @@ class CustomerCreditTransferBuilder
         string $creditorName,
         float $amount,
         string $currency,
-        string $purpose
+        string $purpose,
+        string $endToendId
     ): CustomerCreditTransferBuilder {
         $xpath = $this->prepareXPath($this->instance);
         $nbOfTxsList = $xpath->query('//CstmrCdtTrfInitn/PmtInf/NbOfTxs');
@@ -183,9 +198,7 @@ class CustomerCreditTransferBuilder
         $xmlPmtId->appendChild($xmlInstrId);
 
         $xmlEndToEndId = $this->instance->createElement('EndToEndId');
-        $xmlEndToEndId->nodeValue = $this->randomService->uniqueIdWithDate(
-            'pete' . str_pad((string)$nbOfTxs, 2, '0')
-        );
+        $xmlEndToEndId->nodeValue = $endToendId;
         $xmlPmtId->appendChild($xmlEndToEndId);
 
         $xmlAmt = $this->instance->createElement('Amt');
