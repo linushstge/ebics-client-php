@@ -8,9 +8,15 @@ use AndrewSvirin\Ebics\Models\Bank;
 use AndrewSvirin\Ebics\Models\BankLetter;
 use AndrewSvirin\Ebics\Models\KeyRing;
 use AndrewSvirin\Ebics\Models\User;
+use AndrewSvirin\Ebics\Services\BankLetter\Formatter\HtmlBankLetterFormatter;
+use AndrewSvirin\Ebics\Services\BankLetter\Formatter\PdfBankLetterFormatter;
+use AndrewSvirin\Ebics\Services\BankLetter\Formatter\TxtBankLetterFormatter;
 use AndrewSvirin\Ebics\Services\BankLetter\HashGenerator\CertificateHashGenerator;
 use AndrewSvirin\Ebics\Services\BankLetter\HashGenerator\PublicKeyHashGenerator;
 use AndrewSvirin\Ebics\Services\BankLetterService;
+use AndrewSvirin\Ebics\Services\DigestResolverV2;
+use AndrewSvirin\Ebics\Services\DigestResolverV3;
+use LogicException;
 
 /**
  * EBICS bank letter prepare.
@@ -21,7 +27,6 @@ use AndrewSvirin\Ebics\Services\BankLetterService;
  */
 final class EbicsBankLetter
 {
-
     /**
      * @var BankLetterService
      */
@@ -51,7 +56,14 @@ final class EbicsBankLetter
     public function prepareBankLetter(Bank $bank, User $user, KeyRing $keyRing): BankLetter
     {
         if ($bank->isCertified()) {
-            $hashGenerator = new CertificateHashGenerator();
+            if (Bank::VERSION_25 === $bank->getVersion()) {
+                $digestResolver = new DigestResolverV2();
+            } elseif (Bank::VERSION_30 === $bank->getVersion()) {
+                $digestResolver = new DigestResolverV3();
+            } else {
+                throw new LogicException(sprintf('Version "%s" is not implemented', $bank->getVersion()));
+            }
+            $hashGenerator = new CertificateHashGenerator($digestResolver);
         } else {
             $hashGenerator = new PublicKeyHashGenerator();
         }
@@ -90,5 +102,20 @@ final class EbicsBankLetter
     public function formatBankLetter(BankLetter $bankLetter, FormatterInterface $formatter)
     {
         return $formatter->format($bankLetter);
+    }
+
+    public function createTxtBankLetterFormatter(): TxtBankLetterFormatter
+    {
+        return new TxtBankLetterFormatter();
+    }
+
+    public function createHtmlBankLetterFormatter(): HtmlBankLetterFormatter
+    {
+        return new HtmlBankLetterFormatter();
+    }
+
+    public function createPdfBankLetterFormatter(): PdfBankLetterFormatter
+    {
+        return new PdfBankLetterFormatter();
     }
 }

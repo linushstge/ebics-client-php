@@ -34,10 +34,19 @@ class CustomerCreditTransferBuilder
         $this->randomService = new RandomService();
     }
 
+    /**
+     * @param string $debitorFinInstBIC
+     * @param string $debitorIBAN
+     * @param string $debitorName
+     * @param bool $batchBooking By deactivating the batch booking procedure,
+     * you request your credit institution to book each transaction within this order separately.
+     * @return $this
+     */
     public function createInstance(
-        string $debtorFinInstBic,
-        string $debtorIban,
-        string $debtorName,
+        string $debitorFinInstBIC,
+        string $debitorIBAN,
+        string $debitorName,
+        bool $batchBooking = true,
         string $msgId = null,
         string $paymentReference = null
     ): CustomerCreditTransferBuilder {
@@ -90,7 +99,7 @@ class CustomerCreditTransferBuilder
         $xmlGrpHdr->appendChild($xmlInitgPty);
 
         $xmlNm = $this->instance->createElement('Nm');
-        $xmlNm->nodeValue = $debtorName;
+        $xmlNm->nodeValue = $debitorName;
         $xmlInitgPty->appendChild($xmlNm);
 
         $xmlPmtInf = $this->instance->createElement('PmtInf');
@@ -109,7 +118,7 @@ class CustomerCreditTransferBuilder
         $xmlPmtInf->appendChild($xmlPmtMtd);
 
         $xmlBtchBookg = $this->instance->createElement('BtchBookg');
-        $xmlBtchBookg->nodeValue = 'false';
+        $xmlBtchBookg->nodeValue = (string)$batchBooking;
         $xmlPmtInf->appendChild($xmlBtchBookg);
 
         $xmlNbOfTxs = $this->instance->createElement('NbOfTxs');
@@ -138,7 +147,7 @@ class CustomerCreditTransferBuilder
         $xmlPmtInf->appendChild($xmlDbtr);
 
         $xmlNm = $this->instance->createElement('Nm');
-        $xmlNm->nodeValue = $debtorName;
+        $xmlNm->nodeValue = $debitorName;
         $xmlDbtr->appendChild($xmlNm);
 
         $xmlDbtrAcct = $this->instance->createElement('DbtrAcct');
@@ -148,7 +157,7 @@ class CustomerCreditTransferBuilder
         $xmlDbtrAcct->appendChild($xmlId);
 
         $xmlIBAN = $this->instance->createElement('IBAN');
-        $xmlIBAN->nodeValue = $debtorIban;
+        $xmlIBAN->nodeValue = $debitorIBAN;
         $xmlId->appendChild($xmlIBAN);
 
         $xmlDbtrAgt = $this->instance->createElement('DbtrAgt');
@@ -158,7 +167,7 @@ class CustomerCreditTransferBuilder
         $xmlDbtrAgt->appendChild($xmlFinInstnId);
 
         $xmlBIC = $this->instance->createElement('BIC');
-        $xmlBIC->nodeValue = $debtorFinInstBic;
+        $xmlBIC->nodeValue = $debitorFinInstBIC;
         $xmlFinInstnId->appendChild($xmlBIC);
 
         $xmlChrgBr = $this->instance->createElement('ChrgBr');

@@ -762,8 +762,9 @@ class ASN1 implements ASN1Interface
                         ensure that different semantics are not associated with such values which differ
                         only in the number of trailing 0 bits."
                     */
-                    $bits = count($mapping['mapping']) == $size ? [] :
-                        array_fill(0, count($mapping['mapping']) - $size, false);
+                    $fillSize = count($mapping['mapping']) - $size;
+                    $bits = $fillSize <= 0 ? [] :
+                        array_fill(0, $fillSize, false);
                     for ($i = strlen($decoded['content']) - 1; $i > 0; $i--) {
                         $current = ord($decoded['content'][$i]);
                         for ($j = $offset; $j < 8; $j++) {

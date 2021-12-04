@@ -93,6 +93,11 @@ class RequestContext
      */
     private $signatureData;
 
+    /**
+     * @var BTFContext
+     */
+    private $btfContext;
+
     public function setBank(Bank $bank): RequestContext
     {
         $this->bank = $bank;
@@ -271,5 +276,17 @@ class RequestContext
     public function getSignatureData(): SignatureDataInterface
     {
         return $this->signatureData;
+    }
+
+    public function setBTFContext(BTFContext $btfContext): RequestContext
+    {
+        $this->btfContext = $btfContext;
+
+        return $this;
+    }
+
+    public function getBTFContext(): BTFContext
+    {
+        return $this->btfContext;
     }
 }

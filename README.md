@@ -1,18 +1,17 @@
 # EBICS-CLIENT-PHP
-[![Build Status](https://travis-ci.com/andrew-svirin/ebics-client-php.svg?branch=master)](https://travis-ci.com/andrew-svirin/ebics-client-php)
+[![Build Status](https://travis-ci.com/andrew-svirin/ebics-client-php.svg?branch=master)](https://app.travis-ci.com/github/andrew-svirin/ebics-client-php)
 [![Latest Stable Version](https://poser.pugx.org/andrew-svirin/ebics-client-php/v/stable)](https://packagist.org/packages/andrew-svirin/ebics-client-php)
+[![Total Downloads](https://img.shields.io/packagist/dt/andrew-svirin/ebics-client-php.svg)](https://packagist.org/packages/andrew-svirin/ebics-client-php)
 [![License](https://poser.pugx.org/andrew-svirin/ebics-client-php/license)](https://packagist.org/packages/andrew-svirin/ebics-client-php)
 
 ![EBICS](https://www.ebics.org/typo3conf/ext/siz_ebicsorg_base/Resources/Public/Images/ebics-logo.png)
 
-PHP library to communicate with a bank through EBICS protocol.
-Supported PHP versions - PHP 7.2 & PHP 7.3 & PHP 7.4 & PHP 8.0
+PHP library to communicate with a bank through EBICS protocol.  
+Supported PHP versions - PHP 7.2 & PHP 7.3 & PHP 7.4 & PHP 8.0  
+Support Ebics server versions: 2.5 (default), 3.0  
 
 ## License
 andrew-svirin/ebics-client-php is licensed under the MIT License, see the LICENSE file for details
-
-## Development and integration Ebics for your project and other development
-👉👍 Contact Andrew Svirin https://www.linkedin.com/in/andriy-svirin-0138a177/
 
 ## Installation
 ```bash
@@ -41,7 +40,7 @@ $keyRingRealPath = __PATH_TO_WORKSPACES_DIR__ . '/workspace/keyring.json';
 // Use __IS_CERTIFIED__ true for French banks, otherwise use false.
 $keyRingManager = new KeyRingManager($keyRingRealPath, __PASSWORD__);
 $keyRing = $keyRingManager->loadKeyRing();
-$bank = new Bank(__HOST_ID__, __HOST_URL__);
+$bank = new Bank(__HOST_ID__, __HOST_URL__, __EBICS_SERVER_VERSION___);
 $bank->setIsCertified(__IS_CERTIFIED__);
 $user = new User(__PARTNER_ID__, __USER_ID__);
 $client = new EbicsClient($bank, $user, $keyRing);
@@ -232,7 +231,7 @@ $bankLetter = $ebicsBankLetter->prepareBankLetter(
     $client->getKeyRing()
 );
 
-$txt = $ebicsBankLetter->formatBankLetter($bankLetter, new \AndrewSvirin\Ebics\Services\BankLetter\Formatter\TxtBankLetterFormatter());
+$txt = $ebicsBankLetter->formatBankLetter($bankLetter, $ebicsBankLetter->createPdfBankLetterFormatter());
 ```
 
 ### 3. Wait for the bank validation and activation access.
@@ -257,8 +256,8 @@ try {
 ```
 
 ### 5. Play with other transactions!
-|Transaction| Description |
-| --------- | --------- |
+| Transaction | Description |
+| --- | --- |
 | HEV | Supported protocol version for the Bank. |
 | INI | Send to the bank public signature of signature A005. |
 | HIA | Send to the bank public signatures of authentication (X002) and encryption (E002). |
@@ -271,11 +270,14 @@ try {
 | HAA | Downloads the interim transaction report in SWIFT format (MT942). |
 | VMK | Downloads the interim transaction report in SWIFT format (MT942). |
 | STA | Retrieve the bank account statement. |
+| C52 | Retrieve the bank account report in Camt.052 format. |
 | C53 | Retrieve the bank account statement in Camt.053 format. |
 | Z53 | Another way to retrieve the bank account statement in Camt.053 format (i.e Switzerland financial services). |
 | Z54 | Retrieve a bank account statement in Camt.054 format (i.e available in Switzerland). |
 | CCT | Initiate the credit transfer per Single Euro Payments Area. |
+| XE2 | Initiate the Swiss credit transfer (i.e available in Switzerland). |
 | CDD | Initiate a direct debit transaction. |
+| BTD | Download request (FETCH request). |
 
 #### Unzipping EBICS response.
 
@@ -300,3 +302,12 @@ $zip->extractTo($outputDir, $inputPath);
 You'll find one or many XML files in your output directory.
 
 ### 6. Make HKD request to see what order types allowed.
+
+---
+
+## Donation
+- Wise.com https://wise.com/send/#/enterpayment?recipient=189936743
+- Bitcoin: bc1qhahtnhcrpg8u93pndjglaeuy0nc0tjau9rnst5
+
+## Development and integration Ebics for your project and other development
+👉👍 Contact Andrew Svirin https://www.linkedin.com/in/andriy-svirin-0138a177/
