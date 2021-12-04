@@ -47,6 +47,7 @@ class CustomerCreditTransferBuilder
         string $debitorIBAN,
         string $debitorName,
         bool $batchBooking = true,
+        string $executionDate = null,
         string $msgId = null,
         string $paymentReference = null
     ): CustomerCreditTransferBuilder {
@@ -141,6 +142,9 @@ class CustomerCreditTransferBuilder
 
         $xmlReqdExctnDt = $this->instance->createElement('ReqdExctnDt');
         $xmlReqdExctnDt->nodeValue = $now->format('Y-m-d');
+        if($executionDate) {
+            $xmlReqdExctnDt->nodeValue = date('Y-m-d', strtotime($executionDate));
+        }
         $xmlPmtInf->appendChild($xmlReqdExctnDt);
 
         $xmlDbtr = $this->instance->createElement('Dbtr');
