@@ -2,6 +2,10 @@
 
 namespace EbicsApi\Ebics\Handlers;
 
+use DateTimeInterface;
+use DOMDocument;
+use DOMElement;
+use DOMNode;
 use EbicsApi\Ebics\Contracts\SignatureInterface;
 use EbicsApi\Ebics\Exceptions\CertificateEbicsException;
 use EbicsApi\Ebics\Exceptions\EbicsException;
@@ -16,10 +20,6 @@ use EbicsApi\Ebics\Models\Document;
 use EbicsApi\Ebics\Models\Keyring;
 use EbicsApi\Ebics\Models\User;
 use EbicsApi\Ebics\Services\CryptService;
-use DateTimeInterface;
-use DOMDocument;
-use DOMElement;
-use DOMNode;
 
 /**
  * Class OrderDataHandler manages OrderData DOM elements.
@@ -40,14 +40,20 @@ abstract class OrderDataHandler
     private CertificateX509Factory $certificateX509Factory;
     protected BigIntegerFactory $bigIntegerFactory;
 
-    public function __construct(User $user, Keyring $keyring)
-    {
+    public function __construct(
+        User $user,
+        Keyring $keyring,
+        CryptService $cryptService,
+        SignatureFactory $signatureFactory,
+        CertificateX509Factory $certificateX509Factory,
+        BigIntegerFactory $bigIntegerFactory
+    ) {
         $this->user = $user;
         $this->keyring = $keyring;
-        $this->cryptService = new CryptService();
-        $this->signatureFactory = new SignatureFactory();
-        $this->certificateX509Factory = new CertificateX509Factory();
-        $this->bigIntegerFactory = new BigIntegerFactory();
+        $this->cryptService = $cryptService;
+        $this->signatureFactory = $signatureFactory;
+        $this->certificateX509Factory = $certificateX509Factory;
+        $this->bigIntegerFactory = $bigIntegerFactory;
     }
 
     abstract protected function createSignaturePubKeyOrderData(CustomerINI $xml): DOMElement;

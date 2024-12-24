@@ -21,7 +21,7 @@ use RuntimeException;
  *
  * @internal
  */
-final class OrderDataHandlerV3 extends OrderDataHandler
+final class OrderDataHandlerV30 extends OrderDataHandler
 {
     use H005Trait;
 

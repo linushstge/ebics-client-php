@@ -2,13 +2,16 @@
 
 namespace EbicsApi\Ebics\Tests\Handlers;
 
+use EbicsApi\Ebics\Factories\CertificateX509Factory;
+use EbicsApi\Ebics\Factories\Crypt\BigIntegerFactory;
+use EbicsApi\Ebics\Factories\EbicsFactoryV25;
+use EbicsApi\Ebics\Factories\SignatureFactory;
 use EbicsApi\Ebics\Handlers\OrderDataHandler;
-use EbicsApi\Ebics\Handlers\OrderDataHandlerV25;
 use EbicsApi\Ebics\Handlers\Traits\H004Trait;
 use EbicsApi\Ebics\Handlers\Traits\H00XTrait;
-use EbicsApi\Ebics\Handlers\Traits\XPathTrait;
 use EbicsApi\Ebics\Models\CustomerINI;
 use EbicsApi\Ebics\Models\Http\Request;
+use EbicsApi\Ebics\Services\CryptService;
 use EbicsApi\Ebics\Tests\AbstractEbicsTestCase;
 
 /**
@@ -34,7 +37,15 @@ class OrderDataHandlerTest extends AbstractEbicsTestCase
         parent::setUp();
         $client = $this->setupClientV25(3);
         $this->setupKeys($client->getKeyring());
-        $this->orderDataHandler = new OrderDataHandlerV25($client->getUser(), $client->getKeyring());
+        $ebicsFactory = new EbicsFactoryV25();
+        $this->orderDataHandler = $ebicsFactory->createOrderDataHandler(
+            $client->getUser(),
+            $client->getKeyring(),
+            new CryptService(),
+            new SignatureFactory(),
+            new CertificateX509Factory(),
+            new BigIntegerFactory()
+        );
     }
 
     /**

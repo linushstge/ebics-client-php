@@ -29,6 +29,7 @@ use EbicsApi\Ebics\Models\User;
 use EbicsApi\Ebics\Models\UserSignature;
 use EbicsApi\Ebics\Services\CryptService;
 use EbicsApi\Ebics\Services\DigestResolver;
+use EbicsApi\Ebics\Services\ZipService;
 
 /**
  * Class RequestFactory represents producers for the @see Request.
@@ -38,30 +39,39 @@ use EbicsApi\Ebics\Services\DigestResolver;
  */
 abstract class RequestFactory
 {
+    protected Bank $bank;
+    protected User $user;
+    protected Keyring $keyring;
     protected RequestBuilder $requestBuilder;
     protected OrderDataHandler $orderDataHandler;
     protected DigestResolver $digestResolver;
     protected AuthSignatureHandler $authSignatureHandler;
     protected UserSignatureHandler $userSignatureHandler;
     protected CryptService $cryptService;
-    protected Bank $bank;
-    protected User $user;
-    protected Keyring $keyring;
+    protected ZipService $zipService;
 
-    /**
-     * Constructor.
-     *
-     * @param Bank $bank
-     * @param User $user
-     * @param Keyring $keyring
-     */
-    public function __construct(Bank $bank, User $user, Keyring $keyring)
-    {
-        $this->requestBuilder = new RequestBuilder();
-        $this->cryptService = new CryptService();
+    public function __construct(
+        Bank $bank,
+        User $user,
+        Keyring $keyring,
+        AuthSignatureHandler $authSignatureHandler,
+        UserSignatureHandler $userSignatureHandler,
+        OrderDataHandler $orderDataHandler,
+        DigestResolver $digestResolver,
+        RequestBuilder $requestBuilder,
+        CryptService $cryptService,
+        ZipService $zipService
+    ) {
         $this->bank = $bank;
         $this->user = $user;
         $this->keyring = $keyring;
+        $this->authSignatureHandler = $authSignatureHandler;
+        $this->userSignatureHandler = $userSignatureHandler;
+        $this->orderDataHandler = $orderDataHandler;
+        $this->digestResolver = $digestResolver;
+        $this->requestBuilder = $requestBuilder;
+        $this->cryptService = $cryptService;
+        $this->zipService = $zipService;
     }
 
     abstract protected function createRequestBuilderInstance(): RequestBuilder;

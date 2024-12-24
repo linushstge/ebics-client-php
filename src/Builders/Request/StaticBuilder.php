@@ -2,11 +2,11 @@
 
 namespace EbicsApi\Ebics\Builders\Request;
 
-use EbicsApi\Ebics\Services\CryptService;
 use Closure;
 use DateTimeInterface;
 use DOMDocument;
 use DOMElement;
+use EbicsApi\Ebics\Services\CryptService;
 
 /**
  * Class StaticBuilder builder for request container.
@@ -24,10 +24,10 @@ abstract class StaticBuilder
     protected ?DOMDocument $dom;
     protected CryptService $cryptService;
 
-    public function __construct(?DOMDocument $dom = null)
+    public function __construct(CryptService $cryptService, ?DOMDocument $dom = null)
     {
+        $this->cryptService = $cryptService;
         $this->dom = $dom;
-        $this->cryptService = new CryptService();
     }
 
     /**

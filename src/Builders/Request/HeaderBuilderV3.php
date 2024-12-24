@@ -14,7 +14,7 @@ final class HeaderBuilderV3 extends HeaderBuilder
 {
     public function addStatic(Closure $callback): HeaderBuilder
     {
-        $staticBuilder = new StaticBuilderV3($this->dom);
+        $staticBuilder = new StaticBuilderV3($this->cryptService, $this->dom);
         $this->instance->appendChild($staticBuilder->createInstance()->getInstance());
 
         call_user_func($callback, $staticBuilder);

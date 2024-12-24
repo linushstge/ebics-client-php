@@ -6,16 +6,8 @@ use EbicsApi\Ebics\Builders\Request\OrderDetailsBuilder;
 use EbicsApi\Ebics\Builders\Request\RequestBuilder;
 use EbicsApi\Ebics\Builders\Request\XmlBuilderV24;
 use EbicsApi\Ebics\Contexts\RequestContext;
-use EbicsApi\Ebics\Handlers\AuthSignatureHandlerV24;
-use EbicsApi\Ebics\Handlers\OrderDataHandlerV24;
-use EbicsApi\Ebics\Handlers\UserSignatureHandlerV2;
-use EbicsApi\Ebics\Models\Bank;
 use EbicsApi\Ebics\Models\Http\Request;
-use EbicsApi\Ebics\Models\Keyring;
 use EbicsApi\Ebics\Models\UploadTransaction;
-use EbicsApi\Ebics\Models\User;
-use EbicsApi\Ebics\Services\CryptService;
-use EbicsApi\Ebics\Services\DigestResolverV2;
 use LogicException;
 
 /**
@@ -26,20 +18,11 @@ use LogicException;
  */
 final class RequestFactoryV24 extends RequestFactoryV2
 {
-    public function __construct(Bank $bank, User $user, Keyring $keyring)
-    {
-        $this->authSignatureHandler = new AuthSignatureHandlerV24($keyring);
-        $this->userSignatureHandler = new UserSignatureHandlerV2($user, $keyring);
-        $this->orderDataHandler = new OrderDataHandlerV24($user, $keyring);
-        $this->digestResolver = new DigestResolverV2(new CryptService());
-        parent::__construct($bank, $user, $keyring);
-    }
-
     protected function createRequestBuilderInstance(): RequestBuilder
     {
         return $this->requestBuilder
             ->createInstance(function (Request $request) {
-                return new XmlBuilderV24($request);
+                return new XmlBuilderV24($this->zipService, $this->cryptService, $request);
             });
     }
 

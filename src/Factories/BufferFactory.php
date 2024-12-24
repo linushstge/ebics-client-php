@@ -1,6 +1,6 @@
 <?php
 
-namespace EbicsApi\Ebics\Services;
+namespace EbicsApi\Ebics\Factories;
 
 use EbicsApi\Ebics\Models\Buffer;
 

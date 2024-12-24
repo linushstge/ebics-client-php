@@ -5,6 +5,9 @@ namespace EbicsApi\Ebics;
 use EbicsApi\Ebics\Contracts\BankLetter\FormatterInterface;
 use EbicsApi\Ebics\Factories\BankLetterFactory;
 use EbicsApi\Ebics\Factories\CertificateX509Factory;
+use EbicsApi\Ebics\Factories\EbicsFactoryV24;
+use EbicsApi\Ebics\Factories\EbicsFactoryV25;
+use EbicsApi\Ebics\Factories\EbicsFactoryV30;
 use EbicsApi\Ebics\Factories\SignatureBankLetterFactory;
 use EbicsApi\Ebics\Models\Bank;
 use EbicsApi\Ebics\Models\BankLetter;
@@ -15,8 +18,6 @@ use EbicsApi\Ebics\Services\BankLetter\Formatter\PdfBankLetterFormatter;
 use EbicsApi\Ebics\Services\BankLetter\Formatter\TxtBankLetterFormatter;
 use EbicsApi\Ebics\Services\BankLetterService;
 use EbicsApi\Ebics\Services\CryptService;
-use EbicsApi\Ebics\Services\DigestResolverV2;
-use EbicsApi\Ebics\Services\DigestResolverV3;
 use LogicException;
 
 /**
@@ -55,13 +56,17 @@ final class EbicsBankLetter
      */
     public function prepareBankLetter(Bank $bank, User $user, Keyring $keyring): BankLetter
     {
-        if (Keyring::VERSION_25 === $keyring->getVersion() || Keyring::VERSION_24 === $keyring->getVersion()) {
-            $digestResolver = new DigestResolverV2($this->cryptService);
+        if (Keyring::VERSION_24 === $keyring->getVersion()) {
+            $ebicsFactory = new EbicsFactoryV24();
+        } elseif (Keyring::VERSION_25 === $keyring->getVersion()) {
+            $ebicsFactory = new EbicsFactoryV25();
         } elseif (Keyring::VERSION_30 === $keyring->getVersion()) {
-            $digestResolver = new DigestResolverV3($this->cryptService);
+            $ebicsFactory = new EbicsFactoryV30();
         } else {
             throw new LogicException(sprintf('Version "%s" is not implemented', $keyring->getVersion()));
         }
+
+        $digestResolver = $ebicsFactory->createDigestResolver($this->cryptService);
 
         return $this->bankLetterFactory->create(
             $bank,

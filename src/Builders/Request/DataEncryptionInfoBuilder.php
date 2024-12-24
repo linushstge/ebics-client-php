@@ -2,11 +2,11 @@
 
 namespace EbicsApi\Ebics\Builders\Request;
 
+use DOMDocument;
+use DOMElement;
 use EbicsApi\Ebics\Exceptions\SignatureEbicsException;
 use EbicsApi\Ebics\Models\Keyring;
 use EbicsApi\Ebics\Services\CryptService;
-use DOMDocument;
-use DOMElement;
 
 /**
  * Class DataEncryptionInfoBuilder builder for request container.
@@ -20,10 +20,10 @@ final class DataEncryptionInfoBuilder
     private ?DOMDocument $dom;
     private CryptService $cryptService;
 
-    public function __construct(?DOMDocument $dom = null)
+    public function __construct(CryptService $cryptService, ?DOMDocument $dom = null)
     {
+        $this->cryptService = $cryptService;
         $this->dom = $dom;
-        $this->cryptService = new CryptService();
     }
 
     /**

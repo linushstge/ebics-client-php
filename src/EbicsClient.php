@@ -3,6 +3,7 @@
 namespace EbicsApi\Ebics;
 
 use DateTimeInterface;
+use EbicsApi\Ebics\Builders\Request\RequestBuilder;
 use EbicsApi\Ebics\Contexts\BTDContext;
 use EbicsApi\Ebics\Contexts\BTUContext;
 use EbicsApi\Ebics\Contexts\FDLContext;
@@ -19,24 +20,21 @@ use EbicsApi\Ebics\Exceptions\EbicsException;
 use EbicsApi\Ebics\Exceptions\EbicsResponseException;
 use EbicsApi\Ebics\Exceptions\IncorrectResponseEbicsException;
 use EbicsApi\Ebics\Exceptions\PasswordEbicsException;
+use EbicsApi\Ebics\Factories\BufferFactory;
+use EbicsApi\Ebics\Factories\CertificateX509Factory;
+use EbicsApi\Ebics\Factories\Crypt\BigIntegerFactory;
 use EbicsApi\Ebics\Factories\DocumentFactory;
 use EbicsApi\Ebics\Factories\EbicsExceptionFactory;
+use EbicsApi\Ebics\Factories\EbicsFactoryV24;
+use EbicsApi\Ebics\Factories\EbicsFactoryV25;
+use EbicsApi\Ebics\Factories\EbicsFactoryV30;
 use EbicsApi\Ebics\Factories\OrderResultFactory;
 use EbicsApi\Ebics\Factories\RequestFactory;
-use EbicsApi\Ebics\Factories\RequestFactoryV24;
-use EbicsApi\Ebics\Factories\RequestFactoryV25;
-use EbicsApi\Ebics\Factories\RequestFactoryV3;
 use EbicsApi\Ebics\Factories\SegmentFactory;
 use EbicsApi\Ebics\Factories\SignatureFactory;
 use EbicsApi\Ebics\Factories\TransactionFactory;
 use EbicsApi\Ebics\Handlers\OrderDataHandler;
-use EbicsApi\Ebics\Handlers\OrderDataHandlerV24;
-use EbicsApi\Ebics\Handlers\OrderDataHandlerV25;
-use EbicsApi\Ebics\Handlers\OrderDataHandlerV3;
 use EbicsApi\Ebics\Handlers\ResponseHandler;
-use EbicsApi\Ebics\Handlers\ResponseHandlerV24;
-use EbicsApi\Ebics\Handlers\ResponseHandlerV25;
-use EbicsApi\Ebics\Handlers\ResponseHandlerV3;
 use EbicsApi\Ebics\Models\Bank;
 use EbicsApi\Ebics\Models\Document;
 use EbicsApi\Ebics\Models\DownloadOrderResult;
@@ -52,7 +50,6 @@ use EbicsApi\Ebics\Models\UploadOrderResult;
 use EbicsApi\Ebics\Models\UploadTransaction;
 use EbicsApi\Ebics\Models\User;
 use EbicsApi\Ebics\Models\X509\ContentX509Generator;
-use EbicsApi\Ebics\Services\BufferFactory;
 use EbicsApi\Ebics\Services\CryptService;
 use EbicsApi\Ebics\Services\CurlHttpClient;
 use EbicsApi\Ebics\Services\XmlService;
@@ -98,44 +95,52 @@ final class EbicsClient implements EbicsClientInterface
         $this->user = $user;
         $this->keyring = $keyring;
 
-        $this->segmentFactory = new SegmentFactory();
-        $this->cryptService = new CryptService();
-        $this->zipService = new ZipService();
-        $this->bufferFactory = new BufferFactory($options['buffer_filename'] ?? 'php://memory');
-
         if (Keyring::VERSION_24 === $keyring->getVersion()) {
-            $this->requestFactory = new RequestFactoryV24($bank, $user, $keyring);
-            $this->orderDataHandler = new OrderDataHandlerV24($user, $keyring);
-            $this->responseHandler = new ResponseHandlerV24(
-                $this->segmentFactory,
-                $this->cryptService,
-                $this->zipService,
-                $this->bufferFactory
-            );
+            $ebicsFactory = new EbicsFactoryV24();
         } elseif (Keyring::VERSION_25 === $keyring->getVersion()) {
-            $this->requestFactory = new RequestFactoryV25($bank, $user, $keyring);
-            $this->orderDataHandler = new OrderDataHandlerV25($user, $keyring);
-            $this->responseHandler = new ResponseHandlerV25(
-                $this->segmentFactory,
-                $this->cryptService,
-                $this->zipService,
-                $this->bufferFactory
-            );
+            $ebicsFactory = new EbicsFactoryV25();
         } elseif (Keyring::VERSION_30 === $keyring->getVersion()) {
-            $this->requestFactory = new RequestFactoryV3($bank, $user, $keyring);
-            $this->orderDataHandler = new OrderDataHandlerV3($user, $keyring);
-            $this->responseHandler = new ResponseHandlerV3(
-                $this->segmentFactory,
-                $this->cryptService,
-                $this->zipService,
-                $this->bufferFactory
-            );
+            $ebicsFactory = new EbicsFactoryV30();
         } else {
             throw new LogicException(sprintf('Version "%s" is not implemented', $keyring->getVersion()));
         }
 
-        $this->xmlService = new XmlService();
+        $this->segmentFactory = new SegmentFactory();
+        $this->cryptService = new CryptService();
+        $this->zipService = new ZipService();
         $this->signatureFactory = new SignatureFactory();
+        $this->bufferFactory = new BufferFactory($options['buffer_filename'] ?? 'php://memory');
+
+        $this->orderDataHandler = $ebicsFactory->createOrderDataHandler(
+            $user,
+            $keyring,
+            $this->cryptService,
+            $this->signatureFactory,
+            new CertificateX509Factory(),
+            new BigIntegerFactory()
+        );
+
+        $this->requestFactory = $ebicsFactory->createRequestFactory(
+            $bank,
+            $user,
+            $keyring,
+            $ebicsFactory->createAuthSignatureHandler($keyring, $this->cryptService),
+            $ebicsFactory->createUserSignatureHandler($user, $keyring, $this->cryptService),
+            $this->orderDataHandler,
+            $ebicsFactory->createDigestResolver($this->cryptService),
+            new RequestBuilder(),
+            $this->cryptService,
+            $this->zipService
+        );
+
+        $this->responseHandler = $ebicsFactory->createResponseHandler(
+            $this->segmentFactory,
+            $this->cryptService,
+            $this->zipService,
+            $this->bufferFactory
+        );
+
+        $this->xmlService = new XmlService();
         $this->documentFactory = new DocumentFactory();
         $this->orderResultFactory = new OrderResultFactory();
         $this->transactionFactory = new TransactionFactory();

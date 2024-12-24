@@ -5,6 +5,7 @@ namespace EbicsApi\Ebics\Builders\Request;
 use Closure;
 use DOMDocument;
 use DOMElement;
+use EbicsApi\Ebics\Services\CryptService;
 
 /**
  * Class HeaderBuilder builder for request container.
@@ -14,11 +15,13 @@ use DOMElement;
  */
 abstract class HeaderBuilder
 {
+    protected CryptService $cryptService;
     protected DOMElement $instance;
     protected ?DOMDocument $dom;
 
-    public function __construct(?DOMDocument $dom = null)
+    public function __construct(CryptService $cryptService, ?DOMDocument $dom = null)
     {
+        $this->cryptService = $cryptService;
         $this->dom = $dom;
     }
 

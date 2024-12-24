@@ -27,11 +27,11 @@ abstract class UserSignatureHandler
     protected Keyring $keyring;
     protected CryptService $cryptService;
 
-    public function __construct(User $user, Keyring $keyring)
+    public function __construct(User $user, Keyring $keyring, CryptService $cryptService)
     {
         $this->user = $user;
         $this->keyring = $keyring;
-        $this->cryptService = new CryptService();
+        $this->cryptService = $cryptService;
     }
 
     /**

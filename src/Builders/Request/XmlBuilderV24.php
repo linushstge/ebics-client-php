@@ -2,8 +2,8 @@
 
 namespace EbicsApi\Ebics\Builders\Request;
 
-use EbicsApi\Ebics\Handlers\Traits\H003Trait;
 use Closure;
+use EbicsApi\Ebics\Handlers\Traits\H003Trait;
 
 /**
  * Ebics 2.4 XmlBuilder.
@@ -17,7 +17,7 @@ final class XmlBuilderV24 extends XmlBuilder
 
     public function addHeader(Closure $callback): XmlBuilder
     {
-        $headerBuilder = new HeaderBuilderV2($this->dom);
+        $headerBuilder = new HeaderBuilderV2($this->cryptService, $this->dom);
         $header = $headerBuilder->createInstance()->getInstance();
         $this->instance->appendChild($header);
 
@@ -28,7 +28,7 @@ final class XmlBuilderV24 extends XmlBuilder
 
     public function addBody(Closure $callback = null): XmlBuilder
     {
-        $bodyBuilder = new BodyBuilderV2($this->dom);
+        $bodyBuilder = new BodyBuilderV2($this->zipService, $this->cryptService, $this->dom);
         $body = $bodyBuilder->createInstance()->getInstance();
         $this->instance->appendChild($body);
 

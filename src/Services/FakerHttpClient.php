@@ -174,6 +174,10 @@ final class FakerHttpClient implements HttpClientInterface
 
         $responseContent = file_get_contents($fixturePath);
 
+        if (!is_string($responseContent)) {
+            throw new LogicException('Response content is not valid.');
+        }
+
         $responseContent = preg_replace('/[\r\n]/u', '', $responseContent);
 
         if (!is_string($responseContent)) {

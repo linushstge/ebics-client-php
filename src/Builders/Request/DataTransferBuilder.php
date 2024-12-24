@@ -2,12 +2,12 @@
 
 namespace EbicsApi\Ebics\Builders\Request;
 
-use EbicsApi\Ebics\Contracts\SignatureDataInterface;
-use EbicsApi\Ebics\Services\CryptService;
-use EbicsApi\Ebics\Services\ZipService;
 use Closure;
 use DOMDocument;
 use DOMElement;
+use EbicsApi\Ebics\Contracts\SignatureDataInterface;
+use EbicsApi\Ebics\Services\CryptService;
+use EbicsApi\Ebics\Services\ZipService;
 
 /**
  * Class DataTransferBuilder builder for request container.
@@ -22,11 +22,11 @@ abstract class DataTransferBuilder
     protected ZipService $zipService;
     protected CryptService $cryptService;
 
-    public function __construct(?DOMDocument $dom = null)
+    public function __construct(ZipService $zipService, CryptService $cryptService, ?DOMDocument $dom = null)
     {
         $this->dom = $dom;
-        $this->zipService = new ZipService();
-        $this->cryptService = new CryptService();
+        $this->zipService = $zipService;
+        $this->cryptService = $cryptService;
     }
 
     public function createInstance(): DataTransferBuilder
@@ -62,7 +62,7 @@ abstract class DataTransferBuilder
 
     public function addDataEncryptionInfo(Closure $callable = null): DataTransferBuilder
     {
-        $dataEncryptionInfoBuilder = new DataEncryptionInfoBuilder($this->dom);
+        $dataEncryptionInfoBuilder = new DataEncryptionInfoBuilder($this->cryptService, $this->dom);
         $this->instance->appendChild($dataEncryptionInfoBuilder->createInstance()->getInstance());
 
         call_user_func($callable, $dataEncryptionInfoBuilder);

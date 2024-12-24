@@ -5,6 +5,8 @@ namespace EbicsApi\Ebics\Builders\Request;
 use Closure;
 use DOMDocument;
 use DOMElement;
+use EbicsApi\Ebics\Services\CryptService;
+use EbicsApi\Ebics\Services\ZipService;
 
 /**
  * Class BodyBuilder builder for request container.
@@ -14,11 +16,15 @@ use DOMElement;
  */
 abstract class BodyBuilder
 {
+    protected ZipService $zipService;
+    protected CryptService $cryptService;
     protected DOMElement $instance;
     protected ?DOMDocument $dom;
 
-    public function __construct(?DOMDocument $dom = null)
+    public function __construct(ZipService $zipService, CryptService $cryptService, ?DOMDocument $dom = null)
     {
+        $this->zipService = $zipService;
+        $this->cryptService = $cryptService;
         $this->dom = $dom;
     }
 

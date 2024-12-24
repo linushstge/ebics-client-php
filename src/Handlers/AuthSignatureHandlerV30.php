@@ -12,7 +12,7 @@ use EbicsApi\Ebics\Handlers\Traits\H005Trait;
  *
  * @internal
  */
-final class AuthSignatureHandlerV3 extends AuthSignatureHandler
+final class AuthSignatureHandlerV30 extends AuthSignatureHandler
 {
     use H005Trait;
 }

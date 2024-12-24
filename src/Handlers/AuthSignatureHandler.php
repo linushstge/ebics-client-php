@@ -2,16 +2,14 @@
 
 namespace EbicsApi\Ebics\Handlers;
 
-use EbicsApi\Ebics\Exceptions\AlgoEbicsException;
+use DOMDocument;
+use DOMNode;
 use EbicsApi\Ebics\Exceptions\EbicsException;
-use EbicsApi\Ebics\Exceptions\PasswordEbicsException;
 use EbicsApi\Ebics\Handlers\Traits\C14NTrait;
 use EbicsApi\Ebics\Handlers\Traits\H00XTrait;
 use EbicsApi\Ebics\Models\Keyring;
 use EbicsApi\Ebics\Services\CryptService;
 use EbicsApi\Ebics\Services\DOMHelper;
-use DOMDocument;
-use DOMNode;
 
 /**
  * Class AuthSignatureHandler manage body DOM elements.
@@ -29,10 +27,10 @@ abstract class AuthSignatureHandler
     private Keyring $keyring;
     private CryptService $cryptService;
 
-    public function __construct(Keyring $keyring)
+    public function __construct(Keyring $keyring, CryptService $cryptService)
     {
         $this->keyring = $keyring;
-        $this->cryptService = new CryptService();
+        $this->cryptService = $cryptService;
     }
 
     /**

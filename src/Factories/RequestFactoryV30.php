@@ -11,22 +11,14 @@ use EbicsApi\Ebics\Builders\Request\OrderDetailsBuilder;
 use EbicsApi\Ebics\Builders\Request\RequestBuilder;
 use EbicsApi\Ebics\Builders\Request\StaticBuilder;
 use EbicsApi\Ebics\Builders\Request\XmlBuilder;
-use EbicsApi\Ebics\Builders\Request\XmlBuilderV3;
+use EbicsApi\Ebics\Builders\Request\XmlBuilderV30;
 use EbicsApi\Ebics\Contexts\BTDContext;
 use EbicsApi\Ebics\Contexts\BTUContext;
 use EbicsApi\Ebics\Contexts\RequestContext;
 use EbicsApi\Ebics\Exceptions\EbicsException;
-use EbicsApi\Ebics\Handlers\AuthSignatureHandlerV3;
-use EbicsApi\Ebics\Handlers\OrderDataHandlerV3;
-use EbicsApi\Ebics\Handlers\UserSignatureHandlerV3;
-use EbicsApi\Ebics\Models\Bank;
 use EbicsApi\Ebics\Models\Http\Request;
-use EbicsApi\Ebics\Models\Keyring;
 use EbicsApi\Ebics\Models\UploadTransaction;
-use EbicsApi\Ebics\Models\User;
 use EbicsApi\Ebics\Models\UserSignature;
-use EbicsApi\Ebics\Services\CryptService;
-use EbicsApi\Ebics\Services\DigestResolverV3;
 
 /**
  * Ebics 3.0 RequestFactory.
@@ -34,22 +26,13 @@ use EbicsApi\Ebics\Services\DigestResolverV3;
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
-final class RequestFactoryV3 extends RequestFactory
+final class RequestFactoryV30 extends RequestFactory
 {
-    public function __construct(Bank $bank, User $user, Keyring $keyring)
-    {
-        $this->authSignatureHandler = new AuthSignatureHandlerV3($keyring);
-        $this->userSignatureHandler = new UserSignatureHandlerV3($user, $keyring);
-        $this->orderDataHandler = new OrderDataHandlerV3($user, $keyring);
-        $this->digestResolver = new DigestResolverV3(new CryptService());
-        parent::__construct($bank, $user, $keyring);
-    }
-
     protected function createRequestBuilderInstance(): RequestBuilder
     {
         return $this->requestBuilder
             ->createInstance(function (Request $request) {
-                return new XmlBuilderV3($request);
+                return new XmlBuilderV30($this->zipService, $this->cryptService, $request);
             });
     }
 

@@ -3,11 +3,12 @@
 namespace EbicsApi\Ebics\Tests\Handlers;
 
 use EbicsApi\Ebics\Exceptions\EbicsException;
+use EbicsApi\Ebics\Factories\EbicsFactoryV25;
 use EbicsApi\Ebics\Handlers\AuthSignatureHandler;
-use EbicsApi\Ebics\Handlers\AuthSignatureHandlerV25;
 use EbicsApi\Ebics\Handlers\Traits\H004Trait;
 use EbicsApi\Ebics\Handlers\Traits\H00XTrait;
 use EbicsApi\Ebics\Models\Http\Request;
+use EbicsApi\Ebics\Services\CryptService;
 use EbicsApi\Ebics\Tests\AbstractEbicsTestCase;
 
 /**
@@ -34,7 +35,9 @@ class AuthSignatureHandlerTest extends AbstractEbicsTestCase
         $credentialsId = 1;
         $client = $this->setupClientV25($credentialsId);
         $this->setupKeys($client->getKeyring());
-        $this->authSignatureHandler = new AuthSignatureHandlerV25($client->getKeyring());
+
+        $ebicsFactory = new EbicsFactoryV25();
+        $this->authSignatureHandler = $ebicsFactory->createAuthSignatureHandler($client->getKeyring(), new CryptService());
     }
 
     /**
