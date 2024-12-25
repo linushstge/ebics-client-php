@@ -12,7 +12,7 @@ PHP EBICS Client - https://ebics-api.github.io/ebics-client-php/
 Supported PHP versions - PHP 7.2 - PHP 8.3  
 Support EBICS versions: 2.4, 2.5, 3.0; Encryption versions: E002, X002, A005, A006; Switching EBICS T/TS
 
-# 💥 EBICS API Client for web-server (V1.0.9)
+# 💥 (Premium) EBICS API Client
 
 <img src="./doc/ebics_api_client.png" align="left" width="210" style="padding-right:20px">
 
