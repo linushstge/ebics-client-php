@@ -19,7 +19,7 @@ use RuntimeException;
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Guillaume Sainthillier, Andrew Svirin
  */
-abstract class AbstractX509Generator implements X509GeneratorInterface
+abstract class X509Generator implements X509GeneratorInterface
 {
     private DateTimeInterface $x509StartDate;
     private DateTimeInterface $x509EndDate;

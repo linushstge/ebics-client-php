@@ -150,7 +150,7 @@ class X509 implements X509Interface
     /**
      * Default Constructor.
      */
-    public function __construct()
+    final public function __construct()
     {
         // Explicitly Tagged Module, 1988 Syntax
         // http://tools.ietf.org/html/rfc5280#appendix-A.1
@@ -832,31 +832,31 @@ class X509 implements X509Interface
         ];
     }
 
-    public function saveX509CurrentCert()
+    final public function saveX509CurrentCert()
     {
         return $this->saveX509($this->currentCert);
     }
 
-    public function setStartDate($date)
+    final public function setStartDate($date)
     {
         $date = new DateTime($date, new DateTimeZone(@date_default_timezone_get()));
 
         $this->startDate = $date->format('D, d M Y H:i:s O');
     }
 
-    public function setEndDate($date)
+    final public function setEndDate($date)
     {
         $date = new DateTime($date, new DateTimeZone(@date_default_timezone_get()));
 
         $this->endDate = $date->format('D, d M Y H:i:s O');
     }
 
-    public function setSerialNumber($serial, $base = -256)
+    final public function setSerialNumber($serial, $base = -256)
     {
         $this->serialNumber = new BigInteger($serial, $base);
     }
 
-    public function sign(
+    final public function sign(
         $issuer,
         $subject,
         $signatureAlgorithm = 'sha1WithRSAEncryption'
@@ -988,7 +988,7 @@ class X509 implements X509Interface
         return $result;
     }
 
-    public function loadX509($cert)
+    final public function loadX509($cert)
     {
         $asn1 = new ASN1();
 
@@ -1067,7 +1067,7 @@ class X509 implements X509Interface
         return $result;
     }
 
-    public function saveX509($cert)
+    final public function saveX509($cert)
     {
         if (!is_array($cert) || !isset($cert['tbsCertificate'])) {
             return false;
@@ -1134,13 +1134,13 @@ class X509 implements X509Interface
             '-----END CERTIFICATE-----';
     }
 
-    public function setPublicKey($key)
+    final public function setPublicKey($key)
     {
         $key->setPublicKey();
         $this->publicKey = $key;
     }
 
-    public function getPublicKey(): ?RSAInterface
+    final public function getPublicKey(): ?RSAInterface
     {
         if (isset($this->publicKey)) {
             return $this->publicKey;
@@ -1178,17 +1178,17 @@ class X509 implements X509Interface
         return $publicKey;
     }
 
-    public function setPrivateKey($key)
+    final public function setPrivateKey($key)
     {
         $this->privateKey = $key;
     }
 
-    public function getPrivateKey(): ?RSAInterface
+    final public function getPrivateKey(): ?RSAInterface
     {
         return $this->privateKey;
     }
 
-    public function setDN($dn, $type = 'utf8String'): bool
+    final public function setDN($dn, $type = 'utf8String'): bool
     {
         $this->dn = null;
 
@@ -1227,20 +1227,20 @@ class X509 implements X509Interface
         return true;
     }
 
-    public function getDN()
+    final public function getDN()
     {
         return is_array($this->currentCert) && isset($this->currentCert['tbsCertList']) ?
             $this->currentCert['tbsCertList']['issuer'] : $this->dn;
     }
 
-    public function setDomain()
+    final public function setDomain()
     {
         $this->domains = func_get_args();
         $this->removeDNProp('id-at-commonName');
         $this->setDNProp('id-at-commonName', $this->domains[0]);
     }
 
-    public function setKeyIdentifier($value)
+    final public function setKeyIdentifier($value)
     {
         if (empty($value)) {
             unset($this->currentKeyIdentifier);
@@ -1249,7 +1249,7 @@ class X509 implements X509Interface
         }
     }
 
-    public function computeKeyIdentifier($key = null): string
+    final public function computeKeyIdentifier($key = null): string
     {
         if (is_null($key)) {
             $key = $this;
@@ -1273,7 +1273,7 @@ class X509 implements X509Interface
         return $hash;
     }
 
-    public function formatSubjectPublicKey(): ?array
+    final public function formatSubjectPublicKey(): ?array
     {
         if ($this->publicKey instanceof RSAInterface) {
             // the following two return statements do the same thing. i dunno.. i just prefer the later for some reason.
@@ -1332,7 +1332,7 @@ class X509 implements X509Interface
         }
     }
 
-    public function getAttribute($id, $disposition = self::ATTR_ALL, $csr = null)
+    final public function getAttribute($id, $disposition = self::ATTR_ALL, $csr = null)
     {
         if (empty($csr)) {
             $csr = $this->currentCert;
@@ -1528,7 +1528,7 @@ class X509 implements X509Interface
         }
     }
 
-    public function setExtension($id, $value, $critical = false, $replace = true, string $path = null): bool
+    final public function setExtension($id, $value, $critical = false, $replace = true, string $path = null): bool
     {
         $extensions = &$this->extensions($this->currentCert, $path, true);
 
@@ -1853,7 +1853,7 @@ class X509 implements X509Interface
         }
     }
 
-    public function getIssuerDNProp($propName, $withType = false)
+    final public function getIssuerDNProp($propName, $withType = false)
     {
         switch (true) {
             case !isset($this->currentCert) || !is_array($this->currentCert):

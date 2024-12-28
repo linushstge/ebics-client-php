@@ -11,7 +11,7 @@ use DateTime;
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
-class CertificateX509 extends X509
+final class CertificateX509 extends X509
 {
     /**
      * Get Certificate serialNumber.

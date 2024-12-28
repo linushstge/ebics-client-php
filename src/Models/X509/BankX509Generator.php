@@ -11,7 +11,7 @@ use LogicException;
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
-final class BankX509Generator extends AbstractX509Generator
+final class BankX509Generator extends X509Generator
 {
     /**
      * Set certificate options by Bank.
