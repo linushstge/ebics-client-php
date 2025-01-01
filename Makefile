@@ -20,7 +20,7 @@ docker-php php:
 check:
 	cd docker && docker-compose -p ebics-client-php exec php-cli-ebics-client-php ./vendor/bin/phpcbf
 	cd docker && docker-compose -p ebics-client-php exec php-cli-ebics-client-php ./vendor/bin/phpcs
-	cd docker && docker-compose -p ebics-client-php exec php-cli-ebics-client-php ./vendor/bin/phpstan
+	cd docker && docker-compose -p ebics-client-php exec php-cli-ebics-client-php ./vendor/bin/phpstan --xdebug
 	cd docker && docker-compose -p ebics-client-php exec php-cli-ebics-client-php ./vendor/bin/phpunit
 
 credentials-pack:

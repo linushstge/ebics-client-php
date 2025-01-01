@@ -44,13 +44,12 @@ final class BankX509Generator extends X509Generator
      */
     private function resolveCountryName(string $url): string
     {
-        /** @var string[] */
-        $urlArr = parse_url($url);
-        if (!isset($urlArr['host'])) {
+        $host = parse_url($url, PHP_URL_HOST);
+        if (empty($host)) {
             throw new LogicException('Host not parsed.');
         }
 
-        $explode = explode('.', $urlArr['host']);
+        $explode = explode('.', $host);
         $domain = end($explode);
 
         switch ($domain) {
@@ -72,13 +71,12 @@ final class BankX509Generator extends X509Generator
      */
     private function resolveDomainName(string $url): string
     {
-        /** @var string[] */
-        $urlArr = parse_url($url);
-        if (!isset($urlArr['host'])) {
+        $host = parse_url($url, PHP_URL_HOST);
+        if (empty($host)) {
             throw new LogicException('Host not parsed.');
         }
 
-        $explode = explode('.', $urlArr['host']);
+        $explode = explode('.', $host);
         $explode[0] = '*';
 
         return implode('.', $explode);
@@ -89,14 +87,13 @@ final class BankX509Generator extends X509Generator
      */
     private function resolveEstablishmentName(string $url): string
     {
-        /** @var string[] */
-        $urlArr = parse_url($url);
-        if (!isset($urlArr['host'])) {
+        $host = parse_url($url, PHP_URL_HOST);
+        if (empty($host)) {
             throw new LogicException('Host not parsed.');
         }
 
-        $explode = explode('.', $urlArr['host']);
+        $explode = explode('.', $host);
 
-        return ucfirst($explode[1]);
+        return ucfirst($explode[max(count($explode) - 2, 0)]);
     }
 }
