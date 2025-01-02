@@ -17,7 +17,7 @@ Support EBICS versions: 2.4, 2.5, 3.0; Encryption versions: E002, X002, A005, A0
 <img src="./doc/ebics_api_client.png" align="left" width="210" style="padding-right:20px">
 
 EBICS API Client - https://sites.google.com/view/ebics-api-client  
-EBICS Client can be deployed as a standalone service on a webserver or within a Docker container and provides:
+**For quick integration** EBICS Client can be deployed as a standalone service on a webserver or within a Docker container and provides:
 <br clear="left"/>
 - :100: Support for EBICS Integration
 - :white_check_mark: RESTful API to operate with orders, connections, keyrings, access logs, fetched files
