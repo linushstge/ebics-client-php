@@ -263,7 +263,7 @@ final class AES implements AESInterface
             );
 
             if (!$plaintextChunk) {
-                throw new LogicException('Encryption failed.');
+                return;
             }
 
             if ($ciphertext->length() === 0 && $this->paddable) {
