@@ -1,5 +1,7 @@
 ## 2.4
 
+* Optimized upload transaction.
+* Fix decryption for data.
 * Optimized memory usage.
 
 ## 2.3

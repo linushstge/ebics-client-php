@@ -2,8 +2,8 @@
 
 namespace EbicsApi\Ebics\Models;
 
-use EbicsApi\Ebics\Models\Crypt\X509;
 use DateTime;
+use EbicsApi\Ebics\Models\Crypt\X509;
 
 /**
  * Class CertificateX509 represents Certificate model in X509 structure.

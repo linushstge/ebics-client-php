@@ -2,11 +2,11 @@
 
 namespace EbicsApi\Ebics\Builders\CustomerDirectDebit;
 
+use DateTime;
 use EbicsApi\Ebics\Handlers\Traits\XPathTrait;
 use EbicsApi\Ebics\Models\CustomerDirectDebit;
 use EbicsApi\Ebics\Services\DOMHelper;
 use EbicsApi\Ebics\Services\RandomService;
-use DateTime;
 
 /**
  * Class CustomerDirectDebitBuilder builder for model @see \EbicsApi\Ebics\Models\CustomerDirectDebit

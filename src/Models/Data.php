@@ -2,8 +2,8 @@
 
 namespace EbicsApi\Ebics\Models;
 
-use EbicsApi\Ebics\Contracts\DataInterface;
 use DOMDocument;
+use EbicsApi\Ebics\Contracts\DataInterface;
 
 /**
  * Class Data represents Data model.

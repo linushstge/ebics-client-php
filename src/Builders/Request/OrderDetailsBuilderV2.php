@@ -2,12 +2,12 @@
 
 namespace EbicsApi\Ebics\Builders\Request;
 
+use DateTimeInterface;
 use EbicsApi\Ebics\Contexts\BTDContext;
 use EbicsApi\Ebics\Contexts\BTUContext;
 use EbicsApi\Ebics\Contexts\HVDContext;
 use EbicsApi\Ebics\Contexts\HVEContext;
 use EbicsApi\Ebics\Contexts\HVTContext;
-use DateTimeInterface;
 use LogicException;
 
 /**

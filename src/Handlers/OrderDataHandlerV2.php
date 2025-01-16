@@ -2,6 +2,11 @@
 
 namespace EbicsApi\Ebics\Handlers;
 
+use DateTimeInterface;
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+use DOMNodeList;
 use EbicsApi\Ebics\Contracts\SignatureInterface;
 use EbicsApi\Ebics\Handlers\Traits\H00XTrait;
 use EbicsApi\Ebics\Models\Crypt\X509;
@@ -9,11 +14,6 @@ use EbicsApi\Ebics\Models\CustomerHIA;
 use EbicsApi\Ebics\Models\CustomerINI;
 use EbicsApi\Ebics\Models\Document;
 use EbicsApi\Ebics\Services\DOMHelper;
-use DateTimeInterface;
-use DOMDocument;
-use DOMElement;
-use DOMNode;
-use DOMNodeList;
 
 /**
  * Ebics 2.x OrderDataHandler.

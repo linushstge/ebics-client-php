@@ -273,9 +273,10 @@ final class EbicsClient implements EbicsClientInterface
         $context = $this->requestFactory->prepareStandardContext($context);
         $context->setOnlyES(true);
 
-        $transaction = $this->uploadESTransaction(
+        $transaction = $this->uploadTransaction(
             function (UploadTransaction $transaction) use ($context) {
                 $transaction->setOrderData(' ');
+                $transaction->setNumSegments(0);
                 $transaction->setDigest($this->cryptService->hash($transaction->getOrderData()));
 
                 return $this->requestFactory->createSPR($transaction, $context);
@@ -629,6 +630,7 @@ final class EbicsClient implements EbicsClientInterface
         $transaction = $this->uploadTransaction(
             function (UploadTransaction $transaction) use ($orderData, $context) {
                 $transaction->setOrderData($orderData->getContent());
+                $transaction->setNumSegments(1);
                 $transaction->setDigest($this->cryptService->hash($transaction->getOrderData()));
 
                 return $this->requestFactory->createBTU($transaction, $context);
@@ -678,6 +680,7 @@ final class EbicsClient implements EbicsClientInterface
         $transaction = $this->uploadTransaction(
             function (UploadTransaction $transaction) use ($orderData, $context) {
                 $transaction->setOrderData($orderData->getContent());
+                $transaction->setNumSegments(1);
                 $transaction->setDigest($this->cryptService->hash($transaction->getOrderData()));
 
                 return $this->requestFactory->createFUL($transaction, $context);
@@ -700,6 +703,7 @@ final class EbicsClient implements EbicsClientInterface
         $transaction = $this->uploadTransaction(
             function (UploadTransaction $transaction) use ($orderData, $context) {
                 $transaction->setOrderData($orderData->getContent());
+                $transaction->setNumSegments(1);
                 $transaction->setDigest($this->cryptService->hash($transaction->getOrderData()));
 
                 return $this->requestFactory->createCCT($transaction, $context);
@@ -722,6 +726,7 @@ final class EbicsClient implements EbicsClientInterface
         $transaction = $this->uploadTransaction(
             function (UploadTransaction $transaction) use ($orderData, $context) {
                 $transaction->setOrderData($orderData->getContent());
+                $transaction->setNumSegments(1);
                 $transaction->setDigest($this->cryptService->hash($transaction->getOrderData()));
 
                 return $this->requestFactory->createCDD($transaction, $context);
@@ -744,6 +749,7 @@ final class EbicsClient implements EbicsClientInterface
         $transaction = $this->uploadTransaction(
             function (UploadTransaction $transaction) use ($orderData, $context) {
                 $transaction->setOrderData($orderData->getContent());
+                $transaction->setNumSegments(1);
                 $transaction->setDigest($this->cryptService->hash($transaction->getOrderData()));
 
                 return $this->requestFactory->createCDB($transaction, $context);
@@ -766,6 +772,7 @@ final class EbicsClient implements EbicsClientInterface
         $transaction = $this->uploadTransaction(
             function (UploadTransaction $transaction) use ($orderData, $context) {
                 $transaction->setOrderData($orderData->getContent());
+                $transaction->setNumSegments(1);
                 $transaction->setDigest($this->cryptService->hash($transaction->getOrderData()));
 
                 return $this->requestFactory->createCIP($transaction, $context);
@@ -788,6 +795,7 @@ final class EbicsClient implements EbicsClientInterface
         $transaction = $this->uploadTransaction(
             function (UploadTransaction $transaction) use ($orderData, $context) {
                 $transaction->setOrderData($orderData->getContent());
+                $transaction->setNumSegments(1);
                 $transaction->setDigest($this->cryptService->hash($transaction->getOrderData()));
 
                 return $this->requestFactory->createXE2($transaction, $context);
@@ -810,6 +818,7 @@ final class EbicsClient implements EbicsClientInterface
         $transaction = $this->uploadTransaction(
             function (UploadTransaction $transaction) use ($orderData, $context) {
                 $transaction->setOrderData($orderData->getContent());
+                $transaction->setNumSegments(1);
                 $transaction->setDigest($this->cryptService->hash($transaction->getOrderData()));
 
                 return $this->requestFactory->createXE3($transaction, $context);
@@ -830,6 +839,7 @@ final class EbicsClient implements EbicsClientInterface
         $transaction = $this->uploadTransaction(
             function (UploadTransaction $transaction) use ($orderData, $context) {
                 $transaction->setOrderData($orderData->getContent());
+                $transaction->setNumSegments(1);
                 $transaction->setDigest($this->cryptService->hash($transaction->getOrderData()));
 
                 return $this->requestFactory->createYCT($transaction, $context);
@@ -881,9 +891,10 @@ final class EbicsClient implements EbicsClientInterface
     {
         $context = $this->requestFactory->prepareStandardContext($context)
             ->setHVEContext($hveContext);
-        $transaction = $this->uploadESTransaction(
+        $transaction = $this->uploadTransaction(
             function (UploadTransaction $transaction) use ($context) {
                 $transaction->setDigest($context->getHVEContext()->getDigest());
+                $transaction->setNumSegments(0);
 
                 return $this->requestFactory->createHVE($transaction, $context);
             }
@@ -1140,47 +1151,10 @@ final class EbicsClient implements EbicsClientInterface
      * @throws EbicsResponseException
      * @throws IncorrectResponseEbicsException
      */
-    private function uploadESTransaction(callable $requestClosure): UploadTransaction
-    {
-        $transaction = $this->transactionFactory->createUploadTransaction();
-        $transaction->setKey($this->cryptService->generateTransactionKey());
-        $transaction->setNumSegments(0);
-
-        $request = call_user_func_array($requestClosure, [$transaction]);
-
-        $response = $this->httpClient->post($this->bank->getUrl(), $request);
-        $this->checkH00XReturnCode($request, $response);
-
-        $uploadSegment = $this->responseHandler->extractUploadSegment($request, $response);
-        $transaction->setInitialization($uploadSegment);
-
-        $segment = $this->segmentFactory->createTransferSegment();
-        $segment->setTransactionKey($transaction->getKey());
-        $segment->setSegmentNumber(1);
-        $segment->setIsLastSegment(true);
-        $segment->setNumSegments($transaction->getNumSegments());
-        $segment->setOrderData(' ');
-        $segment->setTransactionId($transaction->getInitialization()->getTransactionId());
-
-        if ($segment->getTransactionId()) {
-            $transaction->addSegment($segment);
-            $transaction->setKey($segment->getTransactionId());
-            $this->transferTransfer($transaction);
-        }
-
-        return $transaction;
-    }
-
-    /**
-     * @throws EbicsException
-     * @throws EbicsResponseException
-     * @throws IncorrectResponseEbicsException
-     */
     private function uploadTransaction(callable $requestClosure): UploadTransaction
     {
         $transaction = $this->transactionFactory->createUploadTransaction();
         $transaction->setKey($this->cryptService->generateTransactionKey());
-        $transaction->setNumSegments(1);
 
         $request = call_user_func_array($requestClosure, [$transaction]);
 
@@ -1197,10 +1171,12 @@ final class EbicsClient implements EbicsClientInterface
         $segment->setNumSegments($transaction->getNumSegments());
         $segment->setOrderData($transaction->getOrderData());
         $segment->setTransactionId($transaction->getInitialization()->getTransactionId());
-        $transaction->addSegment($segment);
-        $transaction->setKey($transaction->getInitialization()->getTransactionId());
 
-        $this->transferTransfer($transaction);
+        if ($segment->getTransactionId()) {
+            $transaction->addSegment($segment);
+            $transaction->setKey($segment->getTransactionId());
+            $this->transferTransfer($transaction);
+        }
 
         return $transaction;
     }
@@ -1342,9 +1318,10 @@ final class EbicsClient implements EbicsClientInterface
      * Create new signature.
      *
      * @param string $type
+     * @param array|null $details
      *
      * @return SignatureInterface
-     * @throws EbicsException
+     * @throws PasswordEbicsException
      */
     private function createUserSignature(string $type, array $details = null): SignatureInterface
     {

@@ -2,6 +2,9 @@
 
 namespace EbicsApi\Ebics\Builders\Request;
 
+use DateTimeInterface;
+use DOMDocument;
+use DOMElement;
 use EbicsApi\Ebics\Contexts\BTDContext;
 use EbicsApi\Ebics\Contexts\BTUContext;
 use EbicsApi\Ebics\Contexts\FDLContext;
@@ -9,9 +12,6 @@ use EbicsApi\Ebics\Contexts\FULContext;
 use EbicsApi\Ebics\Contexts\HVDContext;
 use EbicsApi\Ebics\Contexts\HVEContext;
 use EbicsApi\Ebics\Contexts\HVTContext;
-use DateTimeInterface;
-use DOMDocument;
-use DOMElement;
 
 /**
  * Abstract Class OrderDetailsBuilder builder for request container.

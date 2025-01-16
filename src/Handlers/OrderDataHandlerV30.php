@@ -2,6 +2,8 @@
 
 namespace EbicsApi\Ebics\Handlers;
 
+use DateTimeInterface;
+use DOMElement;
 use EbicsApi\Ebics\Contracts\SignatureInterface;
 use EbicsApi\Ebics\Handlers\Traits\H005Trait;
 use EbicsApi\Ebics\Models\Crypt\X509;
@@ -9,8 +11,6 @@ use EbicsApi\Ebics\Models\CustomerHIA;
 use EbicsApi\Ebics\Models\CustomerINI;
 use EbicsApi\Ebics\Models\Document;
 use EbicsApi\Ebics\Services\DOMHelper;
-use DateTimeInterface;
-use DOMElement;
 use RuntimeException;
 
 /**

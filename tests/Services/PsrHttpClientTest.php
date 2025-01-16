@@ -4,11 +4,11 @@ namespace EbicsApi\Ebics\Tests\Services;
 
 use EbicsApi\Ebics\Models\Http\Request;
 use EbicsApi\Ebics\Services\PsrHttpClient;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 

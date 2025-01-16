@@ -2,8 +2,8 @@
 
 namespace EbicsApi\Ebics\Models;
 
-use EbicsApi\Ebics\Contracts\PostalAddressInterface;
 use DOMElement;
+use EbicsApi\Ebics\Contracts\PostalAddressInterface;
 
 /**
  * This class holds a structured representation of a postal address

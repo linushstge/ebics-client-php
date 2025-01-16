@@ -2,8 +2,8 @@
 
 namespace EbicsApi\Ebics\Builders\Request;
 
-use EbicsApi\Ebics\Models\Http\Request;
 use Closure;
+use EbicsApi\Ebics\Models\Http\Request;
 
 /**
  * Class RequestBuilder builder for model @see \EbicsApi\Ebics\Models\Http\Request

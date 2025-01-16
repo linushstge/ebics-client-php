@@ -2,6 +2,7 @@
 
 namespace EbicsApi\Ebics\Tests;
 
+use DateTime;
 use EbicsApi\Ebics\Contexts\BTDContext;
 use EbicsApi\Ebics\Contexts\BTUContext;
 use EbicsApi\Ebics\Contexts\HVDContext;
@@ -10,7 +11,6 @@ use EbicsApi\Ebics\Contexts\HVTContext;
 use EbicsApi\Ebics\Contexts\RequestContext;
 use EbicsApi\Ebics\Exceptions\InvalidUserOrUserStateException;
 use EbicsApi\Ebics\Factories\DocumentFactory;
-use DateTime;
 
 /**
  * Class EbicsClientTest.

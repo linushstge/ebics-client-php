@@ -2,10 +2,10 @@
 
 namespace EbicsApi\Ebics\Models\Crypt;
 
-use EbicsApi\Ebics\Contracts\Crypt\ASN1Interface;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
+use EbicsApi\Ebics\Contracts\Crypt\ASN1Interface;
 use LogicException;
 
 /**

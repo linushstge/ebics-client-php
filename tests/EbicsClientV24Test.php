@@ -2,11 +2,11 @@
 
 namespace EbicsApi\Ebics\Tests;
 
+use DateTime;
 use EbicsApi\Ebics\Contexts\FDLContext;
 use EbicsApi\Ebics\Contexts\FULContext;
 use EbicsApi\Ebics\Exceptions\InvalidUserOrUserStateException;
 use EbicsApi\Ebics\Factories\DocumentFactory;
-use DateTime;
 use Silarhi\Cfonb\CfonbParser;
 
 /**

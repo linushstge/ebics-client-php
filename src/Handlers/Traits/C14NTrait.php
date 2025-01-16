@@ -2,10 +2,10 @@
 
 namespace EbicsApi\Ebics\Handlers\Traits;
 
-use EbicsApi\Ebics\Exceptions\AlgoEbicsException;
 use DOMNode;
 use DOMNodeList;
 use DOMXPath;
+use EbicsApi\Ebics\Exceptions\AlgoEbicsException;
 
 /**
  * Class C14NTrait manage c14n building.

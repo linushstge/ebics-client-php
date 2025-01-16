@@ -2,6 +2,7 @@
 
 namespace EbicsApi\Ebics\Contracts;
 
+use DateTimeInterface;
 use EbicsApi\Ebics\Contexts\BTDContext;
 use EbicsApi\Ebics\Contexts\BTUContext;
 use EbicsApi\Ebics\Contexts\FDLContext;
@@ -18,7 +19,6 @@ use EbicsApi\Ebics\Models\InitializationOrderResult;
 use EbicsApi\Ebics\Models\Keyring;
 use EbicsApi\Ebics\Models\UploadOrderResult;
 use EbicsApi\Ebics\Models\User;
-use DateTimeInterface;
 
 /**
  * EBICS client representation.

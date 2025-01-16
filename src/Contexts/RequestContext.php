@@ -2,13 +2,12 @@
 
 namespace EbicsApi\Ebics\Contexts;
 
+use DateTime;
+use DateTimeInterface;
 use EbicsApi\Ebics\Contracts\SignatureDataInterface;
 use EbicsApi\Ebics\Models\Bank;
 use EbicsApi\Ebics\Models\Keyring;
 use EbicsApi\Ebics\Models\User;
-use DateTime;
-use DateTimeInterface;
-use LogicException;
 
 /**
  * Class RequestContext context container for @see \EbicsApi\Ebics\Factories\RequestFactory
