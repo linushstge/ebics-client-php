@@ -1328,10 +1328,10 @@ final class EbicsClient implements EbicsClientInterface
         switch ($type) {
             case SignatureInterface::TYPE_A:
                 if (null === $details) {
-                    $keys = $this->cryptService->generateKeys($this->keyring->getPassword());
+                    $keyPair = $this->cryptService->generateKeyPair($this->keyring->getPassword());
                     $certificateGenerator = $this->keyring->getCertificateGenerator();
                 } else {
-                    $keys = $this->cryptService->changePrivateKeyPassword(
+                    $keyPair = $this->cryptService->changePrivateKeyPassword(
                         $details['privatekey'],
                         $details['password'],
                         $this->keyring->getPassword()
@@ -1341,21 +1341,21 @@ final class EbicsClient implements EbicsClientInterface
                 }
 
                 $signature = $this->signatureFactory->createSignatureAFromKeys(
-                    $keys,
+                    $keyPair,
                     $this->keyring->getPassword(),
                     $certificateGenerator
                 );
                 break;
             case SignatureInterface::TYPE_E:
                 $signature = $this->signatureFactory->createSignatureEFromKeys(
-                    $this->cryptService->generateKeys($this->keyring->getPassword()),
+                    $this->cryptService->generateKeyPair($this->keyring->getPassword()),
                     $this->keyring->getPassword(),
                     $this->keyring->getCertificateGenerator()
                 );
                 break;
             case SignatureInterface::TYPE_X:
                 $signature = $this->signatureFactory->createSignatureXFromKeys(
-                    $this->cryptService->generateKeys($this->keyring->getPassword()),
+                    $this->cryptService->generateKeyPair($this->keyring->getPassword()),
                     $this->keyring->getPassword(),
                     $this->keyring->getCertificateGenerator()
                 );
@@ -1393,42 +1393,42 @@ final class EbicsClient implements EbicsClientInterface
      */
     public function changeKeyringPassword(string $newPassword): void
     {
-        $keys = $this->cryptService->changePrivateKeyPassword(
+        $keyPair = $this->cryptService->changePrivateKeyPassword(
             $this->keyring->getUserSignatureA()->getPrivateKey(),
             $this->keyring->getPassword(),
             $newPassword
         );
 
         $signature = $this->signatureFactory->createSignatureAFromKeys(
-            $keys,
+            $keyPair,
             $newPassword,
             $this->keyring->getCertificateGenerator()
         );
 
         $this->keyring->setUserSignatureA($signature);
 
-        $keys = $this->cryptService->changePrivateKeyPassword(
+        $keyPair = $this->cryptService->changePrivateKeyPassword(
             $this->keyring->getUserSignatureX()->getPrivateKey(),
             $this->keyring->getPassword(),
             $newPassword
         );
 
         $signature = $this->signatureFactory->createSignatureXFromKeys(
-            $keys,
+            $keyPair,
             $newPassword,
             $this->keyring->getCertificateGenerator()
         );
 
         $this->keyring->setUserSignatureX($signature);
 
-        $keys = $this->cryptService->changePrivateKeyPassword(
+        $keyPair = $this->cryptService->changePrivateKeyPassword(
             $this->keyring->getUserSignatureE()->getPrivateKey(),
             $this->keyring->getPassword(),
             $newPassword
         );
 
         $signature = $this->signatureFactory->createSignatureEFromKeys(
-            $keys,
+            $keyPair,
             $newPassword,
             $this->keyring->getCertificateGenerator()
         );

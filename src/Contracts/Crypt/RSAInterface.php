@@ -2,6 +2,7 @@
 
 namespace EbicsApi\Ebics\Contracts\Crypt;
 
+use EbicsApi\Ebics\Models\Crypt\KeyPair;
 use EbicsApi\Ebics\Models\Crypt\RSA;
 
 /**
@@ -137,24 +138,13 @@ interface RSAInterface
     /**
      * Create public / private key pair.
      *
-     * Returns an array with the following three elements:
-     *  - 'privatekey': The private key.
-     *  - 'publickey':  The public key.
-     *  - 'partialkey': A partially computed key (if the execution time exceeded $timeout).
-     *                  Will need to be passed back to RSA::createKey() as the third parameter
-     *                  for further processing.
-     *
      * @param int $bits
      * @param int|false $timeout
      * @param array $partial
      *
-     * @return array = [
-     *   'privatekey' => '<string>',
-     *   'publickey' => '<string>',
-     *   'partialkey' => '<bool>',
-     * ]
+     * @return KeyPair
      */
-    public function createKey(int $bits = 1024, $timeout = false, array $partial = []);
+    public function createKey(int $bits = 1024, $timeout = false, array $partial = []): KeyPair;
 
     /**
      * Returns the public key
@@ -245,7 +235,7 @@ interface RSAInterface
      * @param string $oldPassword
      * @param string $newPassword
      *
-     * @return array New pair of keys.
+     * @return KeyPair
      */
-    public function changePassword($privateKey, $oldPassword, $newPassword);
+    public function changePassword($privateKey, $oldPassword, $newPassword): KeyPair;
 }

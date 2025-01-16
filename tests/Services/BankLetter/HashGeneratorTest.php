@@ -5,6 +5,7 @@ namespace EbicsApi\Ebics\Tests\Services\BankLetter;
 use DateTime;
 use EbicsApi\Ebics\Factories\SignatureFactory;
 use EbicsApi\Ebics\Models\Bank;
+use EbicsApi\Ebics\Models\Crypt\KeyPair;
 use EbicsApi\Ebics\Models\X509\BankX509Generator;
 use EbicsApi\Ebics\Services\CryptService;
 use EbicsApi\Ebics\Services\DigestResolverV2;
@@ -41,10 +42,11 @@ class HashGeneratorTest extends AbstractEbicsTestCase
 
         $certificateFactory = new SignatureFactory();
 
-        $signature = $certificateFactory->createSignatureAFromKeys([
-            'publickey' => $publicKey,
-            'privatekey' => $privateKey,
-        ], 'test123', $x509Generator);
+        $signature = $certificateFactory->createSignatureAFromKeys(
+            new KeyPair($publicKey, $privateKey),
+            'test123',
+            $x509Generator
+        );
 
         $hash = $digestResolver->confirmDigest($signature);
 
@@ -71,10 +73,11 @@ class HashGeneratorTest extends AbstractEbicsTestCase
 
         $certificateFactory = new SignatureFactory();
 
-        $signature = $certificateFactory->createSignatureAFromKeys([
-            'publickey' => $publicKey,
-            'privatekey' => $privateKey,
-        ], 'test123', $x509Generator);
+        $signature = $certificateFactory->createSignatureAFromKeys(
+            new KeyPair($publicKey, $privateKey),
+            'test123',
+            $x509Generator
+        );
 
         $hash = $digestResolver->confirmDigest($signature);
 
@@ -94,10 +97,10 @@ class HashGeneratorTest extends AbstractEbicsTestCase
 
         $certificateFactory = new SignatureFactory();
 
-        $signature = $certificateFactory->createSignatureAFromKeys([
-            'publickey' => $publicKey,
-            'privatekey' => $privateKey,
-        ], 'test123');
+        $signature = $certificateFactory->createSignatureAFromKeys(
+            new KeyPair($publicKey, $privateKey),
+            'test123'
+        );
 
         $hash = $digestResolver->confirmDigest($signature);
 

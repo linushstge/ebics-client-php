@@ -15,7 +15,6 @@ use EbicsApi\Ebics\Tests\AbstractEbicsTestCase;
  */
 class CryptServiceTest extends AbstractEbicsTestCase
 {
-
     /**
      * @group crypt-service-generate-keys
      */
@@ -25,10 +24,9 @@ class CryptServiceTest extends AbstractEbicsTestCase
         $client = $this->setupClientV25($credentialsId);
         $cryptService = new CryptService();
 
-        $keys = $cryptService->generateKeys($client->getKeyring()->getPassword());
+        $keyPair = $cryptService->generateKeyPair($client->getKeyring()->getPassword());
 
-        self::assertArrayHasKey('privatekey', $keys);
-        self::assertArrayHasKey('publickey', $keys);
-        self::assertArrayHasKey('partialkey', $keys);
+        self::assertObjectHasProperty('privateKey', $keyPair);
+        self::assertObjectHasProperty('publicKey', $keyPair);
     }
 }

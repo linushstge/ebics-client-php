@@ -5,6 +5,7 @@ namespace EbicsApi\Ebics\Tests\Factories\X509;
 use DateTime;
 use EbicsApi\Ebics\Factories\SignatureFactory;
 use EbicsApi\Ebics\Models\Bank;
+use EbicsApi\Ebics\Models\Crypt\KeyPair;
 use EbicsApi\Ebics\Models\X509\BankX509Generator;
 use EbicsApi\Ebics\Tests\AbstractEbicsTestCase;
 
@@ -35,10 +36,11 @@ class X509GeneratorTest extends AbstractEbicsTestCase
         $x509Generator->setSerialNumber('539453510852155194065233908413342789156542395956670254476154968597583055940');
 
         $signatureFactory = new SignatureFactory();
-        $signature = $signatureFactory->createSignatureAFromKeys([
-            'publickey' => $publicKey,
-            'privatekey' => $privateKey,
-        ], 'test123', $x509Generator);
+        $signature = $signatureFactory->createSignatureAFromKeys(
+            new KeyPair($publicKey, $privateKey),
+            'test123',
+            $x509Generator
+        );
 
         self::assertEquals($signature->getPrivateKey(), $privateKey);
         self::assertEquals($signature->getPublicKey(), $publicKey);

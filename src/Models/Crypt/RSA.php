@@ -215,7 +215,7 @@ final class RSA implements RSAInterface
         $this->hLen = $this->hash->getLength();
     }
 
-    public function createKey($bits = 1024, $timeout = false, $partial = []): array
+    public function createKey($bits = 1024, $timeout = false, $partial = []): KeyPair
     {
         if (!defined('CRYPT_RSA_EXPONENT')) {
             // http://en.wikipedia.org/wiki/65537_%28number%29
@@ -271,11 +271,7 @@ final class RSA implements RSAInterface
         while (openssl_error_string() !== false) {
         }
 
-        return [
-            'privatekey' => $privatekey,
-            'publickey' => $publickey,
-            'partialkey' => false,
-        ];
+        return new KeyPair($publickey, $privatekey);
     }
 
     /**
@@ -324,6 +320,7 @@ final class RSA implements RSAInterface
                     case isset($key[1]):
                         $components['modulus'] = $key[1]->copy();
                 }
+
                 return isset($components['modulus']) && isset($components['publicExponent']) ? $components : false;
             case self::PRIVATE_FORMAT_PKCS1:
             case self::PUBLIC_FORMAT_PKCS1:
@@ -349,8 +346,8 @@ final class RSA implements RSAInterface
                 if (preg_match('#DEK-Info: (.+),(.+)#', $key, $matches)) {
                     $iv = pack('H*', trim($matches[2]));
 
-                    $symkey = pack('H*', md5($this->password . substr($iv, 0, 8))); // symkey is short for symmetric key
-                    $symkey .= pack('H*', md5($symkey . $this->password . substr($iv, 0, 8)));
+                    $symkey = pack('H*', md5($this->password.substr($iv, 0, 8))); // symkey is short for symmetric key
+                    $symkey .= pack('H*', md5($symkey.$this->password.substr($iv, 0, 8)));
 
                     // remove the Proc-Type / DEK-Info sections as they're no longer needed
                     $key = preg_replace('#^(?:Proc-Type|DEK-Info): .*#m', '', $key);
@@ -447,8 +444,8 @@ final class RSA implements RSAInterface
                     $components['modulus'] = new BigInteger($temp, 256);
                     $this->stringShift($key); // skip over self::ASN1_INTEGER
                     $length = $this->decodeLength($key);
-                    $components[$type == self::PUBLIC_FORMAT_PKCS1 ? 'publicExponent' : 'privateExponent'] =
-                        new BigInteger($this->stringShift($key, $length), 256);
+                    $components[$type == self::PUBLIC_FORMAT_PKCS1 ? 'publicExponent' : 'privateExponent']
+                        = new BigInteger($this->stringShift($key, $length), 256);
 
                     return $components;
                 }
@@ -504,6 +501,7 @@ final class RSA implements RSAInterface
     {
         $substr = substr($string, 0, $index);
         $string = substr($string, $index);
+
         return $substr;
     }
 
@@ -530,6 +528,7 @@ final class RSA implements RSAInterface
             }
             [, $length] = $array;
         }
+
         return $length;
     }
 
@@ -551,6 +550,7 @@ final class RSA implements RSAInterface
         }
 
         $temp = ltrim(pack('N', $length), chr(0));
+
         return pack('Ca*', 0x80 | strlen($temp), $temp);
     }
 
@@ -578,6 +578,7 @@ final class RSA implements RSAInterface
         // remove new lines
         $temp = str_replace(["\r", "\n", ' '], '', $temp);
         $temp = preg_match('#^[a-zA-Z\d/+]*={0,2}$#', $temp) ? base64_decode($temp) : false;
+
         return $temp != false ? $temp : $str;
     }
 
@@ -612,7 +613,7 @@ final class RSA implements RSAInterface
             'prime2' => $primes[2]->toBytes($signed),
             'exponent1' => $exponents[1]->toBytes($signed),
             'exponent2' => $exponents[2]->toBytes($signed),
-            'coefficient' => $coefficients[2]->toBytes($signed)
+            'coefficient' => $coefficients[2]->toBytes($signed),
         ];
 
         // if the format in question does not support multi-prime rsa and multi-prime rsa was used,
@@ -649,8 +650,8 @@ final class RSA implements RSAInterface
                     }
                     $iv = (string)openssl_random_pseudo_bytes($ivLen);
 
-                    $symkey = pack('H*', md5($this->password . $iv)); // symkey is short for symmetric key
-                    $symkey .= substr(pack('H*', md5($symkey . $this->password . $iv)), 0, 8);
+                    $symkey = pack('H*', md5($this->password.$iv)); // symkey is short for symmetric key
+                    $symkey .= substr(pack('H*', md5($symkey.$this->password.$iv)), 0, 8);
 
                     $crypt = new TripleDES();
                     $crypt->setKey($symkey);
@@ -660,15 +661,15 @@ final class RSA implements RSAInterface
 
                     $iv = strtoupper(bin2hex($iv));
                     $method = strtoupper($method);
-                    $RSAPrivateKey = "-----BEGIN RSA PRIVATE KEY-----\r\n" .
-                        "Proc-Type: 4,ENCRYPTED\r\n" .
-                        "DEK-Info: $method,$iv\r\n" .
-                        "\r\n" .
-                        chunk_split(base64_encode($RSAPrivateKeyEncrypted), 64) .
+                    $RSAPrivateKey = "-----BEGIN RSA PRIVATE KEY-----\r\n".
+                        "Proc-Type: 4,ENCRYPTED\r\n".
+                        "DEK-Info: $method,$iv\r\n".
+                        "\r\n".
+                        chunk_split(base64_encode($RSAPrivateKeyEncrypted), 64).
                         '-----END RSA PRIVATE KEY-----';
                 } else {
-                    $RSAPrivateKey = "-----BEGIN RSA PRIVATE KEY-----\r\n" .
-                        chunk_split(base64_encode($RSAPrivateKey), 64) .
+                    $RSAPrivateKey = "-----BEGIN RSA PRIVATE KEY-----\r\n".
+                        chunk_split(base64_encode($RSAPrivateKey), 64).
                         '-----END RSA PRIVATE KEY-----';
                 }
 
@@ -705,7 +706,7 @@ final class RSA implements RSAInterface
                         self::ASN1_INTEGER,
                         $this->encodeLength(strlen($publicExponent)),
                         $publicExponent
-                    )
+                    ),
                 ];
 
                 $RSAPublicKey = pack(
@@ -717,24 +718,24 @@ final class RSA implements RSAInterface
                 );
 
                 if ($this->publicKeyFormat == self::PUBLIC_FORMAT_PKCS1_RAW) {
-                    $RSAPublicKey = "-----BEGIN RSA PUBLIC KEY-----\r\n" .
-                        chunk_split(base64_encode($RSAPublicKey), 64) .
+                    $RSAPublicKey = "-----BEGIN RSA PUBLIC KEY-----\r\n".
+                        chunk_split(base64_encode($RSAPublicKey), 64).
                         '-----END RSA PUBLIC KEY-----';
                 } else {
                     // sequence(oid(1.2.840.113549.1.1.1), null)) = rsaEncryption.
                     $rsaOID = pack('H*', '300d06092a864886f70d0101010500'); // hex version of MA0GCSqGSIb3DQEBAQUA
-                    $RSAPublicKey = chr(0) . $RSAPublicKey;
-                    $RSAPublicKey = chr(3) . $this->encodeLength(strlen($RSAPublicKey)) . $RSAPublicKey;
+                    $RSAPublicKey = chr(0).$RSAPublicKey;
+                    $RSAPublicKey = chr(3).$this->encodeLength(strlen($RSAPublicKey)).$RSAPublicKey;
 
                     $RSAPublicKey = pack(
                         'Ca*a*',
                         self::ASN1_SEQUENCE,
-                        $this->encodeLength(strlen($rsaOID . $RSAPublicKey)),
-                        $rsaOID . $RSAPublicKey
+                        $this->encodeLength(strlen($rsaOID.$RSAPublicKey)),
+                        $rsaOID.$RSAPublicKey
                     );
 
-                    $RSAPublicKey = "-----BEGIN PUBLIC KEY-----\r\n" .
-                        chunk_split(base64_encode($RSAPublicKey), 64) .
+                    $RSAPublicKey = "-----BEGIN PUBLIC KEY-----\r\n".
+                        chunk_split(base64_encode($RSAPublicKey), 64).
                         '-----END PUBLIC KEY-----';
                 }
 
@@ -751,6 +752,7 @@ final class RSA implements RSAInterface
 
         if ($key === false && !empty($this->modulus)) {
             $this->publicExponent = $this->exponent;
+
             return true;
         }
 
@@ -770,6 +772,7 @@ final class RSA implements RSAInterface
         if (empty($this->modulus) || !$this->modulus->equals($components['modulus'])) {
             $this->modulus = $components['modulus'];
             $this->exponent = $this->publicExponent = $components['publicExponent'];
+
             return true;
         }
 
@@ -814,8 +817,9 @@ final class RSA implements RSAInterface
 
         // If key was formed with switched Modulus and Exponent, then change the place of key parts.
         // It can happens for Bank.
-        if (isset($components['privateExponent']) && isset($components['modulus']) &&
-            strlen($components['privateExponent']) > strlen($components['modulus'])) {
+        if (isset($components['privateExponent']) && isset($components['modulus'])
+            && strlen($components['privateExponent']) > strlen($components['modulus'])
+        ) {
             $buffer = $components['privateExponent'];
             $components['privateExponent'] = $components['modulus'];
             $components['modulus'] = $buffer;
@@ -908,6 +912,7 @@ final class RSA implements RSAInterface
         foreach ($plaintext as $m) {
             $ciphertext .= $this->rsaesPkcs1V15Encrypt($m);
         }
+
         return $ciphertext;
     }
 
@@ -921,6 +926,7 @@ final class RSA implements RSAInterface
         $this->publicKeyFormat = $type;
         $temp = $this->convertPublicKey($this->modulus, $this->publicExponent);
         $this->publicKeyFormat = $oldFormat;
+
         return $temp;
     }
 
@@ -941,6 +947,7 @@ final class RSA implements RSAInterface
             $this->coefficients
         );
         $this->privateKeyFormat = $oldFormat;
+
         return $temp;
     }
 
@@ -1045,6 +1052,7 @@ final class RSA implements RSAInterface
         if ($m->compare($this->zero) < 0 || $m->compare($this->modulus) > 0) {
             throw new LogicException('Message representative out of range');
         }
+
         return $this->exponentiate($m);
     }
 
@@ -1084,7 +1092,7 @@ final class RSA implements RSAInterface
 
         $m_i = [
             1 => $this->blind($x, $r, 1),
-            2 => $this->blind($x, $r, 2)
+            2 => $this->blind($x, $r, 2),
         ];
         $h = $m_i[1]->subtract($m_i[2]);
         $h = $h->multiply($this->coefficients[2]);
@@ -1147,6 +1155,7 @@ final class RSA implements RSAInterface
         if (strlen($x) > $xLen) {
             throw new LogicException('Integer too large');
         }
+
         return str_pad($x, $xLen, chr(0), STR_PAD_LEFT);
     }
 
@@ -1181,14 +1190,15 @@ final class RSA implements RSAInterface
         }
         $type = 2;
         // see the comments of _rsaes_pkcs1_v1_5_decrypt() to understand why this is being done
-        if (defined('CRYPT_RSA_PKCS15_COMPAT') &&
-            (!isset($this->publicExponent) || $this->exponent !== $this->publicExponent)) {
+        if (defined('CRYPT_RSA_PKCS15_COMPAT')
+            && (!isset($this->publicExponent) || $this->exponent !== $this->publicExponent)
+        ) {
             $type = 1;
             // "The padding string PS shall consist of k-3-||D|| octets. ...
             // for block type 01, they shall have value FF"
             $ps = str_repeat("\xFF", $psLen);
         }
-        $em = chr(0) . chr($type) . $ps . chr(0) . $m;
+        $em = chr(0).chr($type).$ps.chr(0).$m;
 
         // RSA encryption
         $m = $this->os2ip($em);
@@ -1214,6 +1224,7 @@ final class RSA implements RSAInterface
         if ($m->compare($this->zero) < 0 || $m->compare($this->modulus) > 0) {
             throw new LogicException('Message representative out of range');
         }
+
         return $this->exponentiate($m);
     }
 
@@ -1284,6 +1295,7 @@ final class RSA implements RSAInterface
         if ($c->compare($this->zero) < 0 || $c->compare($this->modulus) > 0) {
             throw new LogicException('Ciphertext representative out of range');
         }
+
         return $this->exponentiate($c);
     }
 
@@ -1330,17 +1342,17 @@ final class RSA implements RSAInterface
         }
 
         $salt = openssl_random_pseudo_bytes($sLen);
-        $m2 = "\0\0\0\0\0\0\0\0" . $mHash . $salt;
+        $m2 = "\0\0\0\0\0\0\0\0".$mHash.$salt;
         $h = $this->hash->hash($m2);
         $ps = str_repeat(chr(0), $emLen - $sLen - $this->hLen - 2);
-        $db = $ps . chr(1) . $salt;
+        $db = $ps.chr(1).$salt;
         $dbMask = $this->mgf1($h, $emLen - $this->hLen - 1);
         $maskedDB = $db ^ $dbMask;
         if (empty($maskedDB)) {
             throw new LogicException('maskedDB can not be empty');
         }
         $maskedDB[0] = ~chr(0xFF << ($emBits & 7)) & $maskedDB[0];
-        $em = $maskedDB . $h . chr(0xBC);
+        $em = $maskedDB.$h.chr(0xBC);
 
         return $em;
     }
@@ -1383,8 +1395,9 @@ final class RSA implements RSAInterface
             return false;
         }
         $salt = substr($db, $temp + 1); // should be $sLen long
-        $m2 = "\0\0\0\0\0\0\0\0" . $mHash . $salt;
+        $m2 = "\0\0\0\0\0\0\0\0".$mHash.$salt;
         $h2 = $this->hash->hash($m2);
+
         return $this->equals($h, $h2);
     }
 
@@ -1406,7 +1419,7 @@ final class RSA implements RSAInterface
         $count = ceil($maskLen / $this->mgfHLen);
         for ($i = 0; $i < $count; $i++) {
             $c = pack('N', $i);
-            $t .= $this->mgfHash->hash($mgfSeed . $c);
+            $t .= $this->mgfHash->hash($mgfSeed.$c);
         }
 
         return substr($t, 0, $maskLen);
@@ -1463,7 +1476,7 @@ final class RSA implements RSAInterface
     /**
      * @inheritDoc
      */
-    public function changePassword($oldPrivatekey, $oldPassword, $newPassword)
+    public function changePassword($oldPrivatekey, $oldPassword, $newPassword): KeyPair
     {
         if (!defined('CRYPT_RSA_EXPONENT')) {
             // http://en.wikipedia.org/wiki/65537_%28number%29
@@ -1524,10 +1537,6 @@ final class RSA implements RSAInterface
         while (openssl_error_string() !== false) {
         }
 
-        return [
-            'privatekey' => $privatekey,
-            'publickey' => $publickey,
-            'partialkey' => false,
-        ];
+        return new KeyPair($publickey, $privatekey);
     }
 }

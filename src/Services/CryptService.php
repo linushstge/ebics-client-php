@@ -8,6 +8,7 @@ use EbicsApi\Ebics\Exceptions\EbicsException;
 use EbicsApi\Ebics\Factories\Crypt\AESFactory;
 use EbicsApi\Ebics\Factories\Crypt\RSAFactory;
 use EbicsApi\Ebics\Models\Buffer;
+use EbicsApi\Ebics\Models\Crypt\KeyPair;
 use EbicsApi\Ebics\Models\Keyring;
 use LogicException;
 use RuntimeException;
@@ -233,16 +234,13 @@ final class CryptService
      * @param string $algorithm
      * @param int $length
      *
-     * @return array = [
-     *      'publickey' => '<string>',
-     *      'privatekey' => '<string>',
-     *  ]
+     * @return KeyPair
      */
-    public function generateKeys(
+    public function generateKeyPair(
         string $password,
         string $algorithm = 'sha256',
         int $length = 2048
-    ): array {
+    ): KeyPair {
         $rsa = $this->rsaFactory->create();
         $rsa->setHash($algorithm);
         $rsa->setPassword($password);
@@ -520,13 +518,13 @@ final class CryptService
      * @param string $oldPassword
      * @param string $newPassword
      *
-     * @return array
+     * @return KeyPair
      */
-    public function changePrivateKeyPassword(string $privateKey, string $oldPassword, string $newPassword): array
+    public function changePrivateKeyPassword(string $privateKey, string $oldPassword, string $newPassword): KeyPair
     {
-        $pk = $this->rsaFactory->create();
+        $rsa = $this->rsaFactory->create();
 
-        return $pk->changePassword(
+        return $rsa->changePassword(
             $privateKey,
             $oldPassword,
             $newPassword

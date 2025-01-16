@@ -14,12 +14,7 @@ final class Signature implements SignatureInterface
 {
     private string $type;
     private string $publicKey;
-
-    /**
-     * Private key null for represent bank signature.
-     */
     private ?string $privateKey;
-
     private ?string $certificateContent;
 
     /**
@@ -27,7 +22,7 @@ final class Signature implements SignatureInterface
      * @param string $publicKey
      * @param string|null $privateKey
      */
-    public function __construct(string $type, string $publicKey, string $privateKey = null)
+    public function __construct(string $type, string $publicKey, ?string $privateKey)
     {
         $this->type = $type;
         $this->publicKey = $publicKey;

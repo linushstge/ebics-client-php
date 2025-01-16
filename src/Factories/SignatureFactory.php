@@ -6,6 +6,7 @@ use EbicsApi\Ebics\Contracts\Crypt\BigIntegerInterface;
 use EbicsApi\Ebics\Contracts\SignatureInterface;
 use EbicsApi\Ebics\Contracts\X509GeneratorInterface;
 use EbicsApi\Ebics\Factories\Crypt\RSAFactory;
+use EbicsApi\Ebics\Models\Crypt\KeyPair;
 use EbicsApi\Ebics\Models\Crypt\RSA;
 use EbicsApi\Ebics\Models\Signature;
 use LogicException;
@@ -86,57 +87,48 @@ final class SignatureFactory
     }
 
     /**
-     * @param array $keys = [
-     *      'publickey' => '<string>',
-     *      'privatekey' => '<string>',
-     *  ]
+     * @param KeyPair $keyPair
      * @param string $password
      * @param X509GeneratorInterface|null $x509Generator
      *
      * @return SignatureInterface
      */
     public function createSignatureAFromKeys(
-        array $keys,
+        KeyPair $keyPair,
         string $password,
         X509GeneratorInterface $x509Generator = null
     ): SignatureInterface {
-        return $this->createSignatureFromKeys($keys, $password, SignatureInterface::TYPE_A, $x509Generator);
+        return $this->createSignatureFromKeys($keyPair, $password, SignatureInterface::TYPE_A, $x509Generator);
     }
 
     /**
-     * @param array $keys = [
-     *      'publickey' => '<string>',
-     *      'privatekey' => '<string>',
-     *  ]
+     * @param KeyPair $keyPair
      * @param string $password
      * @param X509GeneratorInterface|null $x509Generator
      *
      * @return SignatureInterface
      */
     public function createSignatureEFromKeys(
-        array $keys,
+        KeyPair $keyPair,
         string $password,
         X509GeneratorInterface $x509Generator = null
     ): SignatureInterface {
-        return $this->createSignatureFromKeys($keys, $password, SignatureInterface::TYPE_E, $x509Generator);
+        return $this->createSignatureFromKeys($keyPair, $password, SignatureInterface::TYPE_E, $x509Generator);
     }
 
     /**
-     * @param array $keys = [
-     *      'publickey' => '<string>',
-     *      'privatekey' => '<string>',
-     *  ]
+     * @param KeyPair $keyPair
      * @param string $password
      * @param X509GeneratorInterface|null $x509Generator
      *
      * @return SignatureInterface
      */
     public function createSignatureXFromKeys(
-        array $keys,
+        KeyPair $keyPair,
         string $password,
         X509GeneratorInterface $x509Generator = null
     ): SignatureInterface {
-        return $this->createSignatureFromKeys($keys, $password, SignatureInterface::TYPE_X, $x509Generator);
+        return $this->createSignatureFromKeys($keyPair, $password, SignatureInterface::TYPE_X, $x509Generator);
     }
 
     /**
@@ -166,10 +158,7 @@ final class SignatureFactory
     }
 
     /**
-     * @param array $keys = [
-     *      'publickey' => '<string>',
-     *      'privatekey' => '<string>',
-     *  ]
+     * @param KeyPair $keyPair
      * @param string $password
      * @param string $type
      * @param X509GeneratorInterface|null $x509Generator
@@ -177,15 +166,15 @@ final class SignatureFactory
      * @return SignatureInterface
      */
     private function createSignatureFromKeys(
-        array $keys,
+        KeyPair $keyPair,
         string $password,
         string $type,
         X509GeneratorInterface $x509Generator = null
     ): SignatureInterface {
-        $signature = new Signature($type, $keys['publickey'], $keys['privatekey']);
+        $signature = new Signature($type, $keyPair->getPublicKey(), $keyPair->getPrivateKey());
 
         if (null !== $x509Generator) {
-            $certificateContent = $this->generateCertificateContent($keys, $password, $type, $x509Generator);
+            $certificateContent = $this->generateCertificateContent($keyPair, $password, $type, $x509Generator);
             $signature->setCertificateContent($certificateContent);
         }
 
@@ -193,10 +182,7 @@ final class SignatureFactory
     }
 
     /**
-     * @param array $keys = [
-     *      'publickey' => '<string>',
-     *      'privatekey' => '<string>',
-     *  ]
+     * @param KeyPair $keyPair
      * @param string $password
      * @param string $type
      * @param X509GeneratorInterface $x509Generator
@@ -204,14 +190,14 @@ final class SignatureFactory
      * @return string
      */
     private function generateCertificateContent(
-        array $keys,
+        KeyPair $keyPair,
         string $password,
         string $type,
         X509GeneratorInterface $x509Generator
     ): string {
-        $rsaPrivateKey = $this->rsaFactory->createPrivate($keys['privatekey'], $password);
+        $rsaPrivateKey = $this->rsaFactory->createPrivate($keyPair->getPrivateKey(), $password);
 
-        $rsaPublicKey = $this->rsaFactory->createPublic($keys['publickey']);
+        $rsaPublicKey = $this->rsaFactory->createPublic($keyPair->getPublicKey());
 
         switch ($type) {
             case SignatureInterface::TYPE_A:
