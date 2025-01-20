@@ -54,27 +54,56 @@ final class RequestFactoryV24 extends RequestFactoryV2
 
     public function createVMK(RequestContext $context): Request
     {
-        throw new LogicException('Method not implemented yet for EBICS 2.4');
+        $fdlContext = $context->getFdlContext();
+
+        $fdlContext->setFileFormat('FDL.camt.fin.mt942.stm');
+
+        return $this->createFDL($context);
     }
 
     public function createSTA(RequestContext $context): Request
     {
-        throw new LogicException('Method not implemented yet for EBICS 2.4');
+        $fdlContext = $context->getFdlContext();
+
+        $fdlContext->setFileFormat('FDL.camt.fin.mt940.stm');
+
+        return $this->createFDL($context);
+    }
+
+    public function createBKA(RequestContext $context): Request
+    {
+        $fdlContext = $context->getFdlContext();
+
+        $fdlContext->setFileFormat('FDL.camt.xxx.STMpdf.stm');
+
+        return $this->createFDL($context);
     }
 
     public function createC52(RequestContext $context): Request
     {
-        throw new LogicException('Method not implemented yet for EBICS 2.4');
+        $fdlContext = $context->getFdlContext();
+
+        $fdlContext->setFileFormat('FDL.camt.052.001.xx.stm');
+
+        return $this->createFDL($context);
     }
 
     public function createC53(RequestContext $context): Request
     {
-        throw new LogicException('Method not implemented yet for EBICS 2.4');
+        $fdlContext = $context->getFdlContext();
+
+        $fdlContext->setFileFormat('FDL.camt.053.001.xx.stm');
+
+        return $this->createFDL($context);
     }
 
     public function createC54(RequestContext $context): Request
     {
-        throw new LogicException('Method not implemented yet for EBICS 2.4');
+        $fdlContext = $context->getFdlContext();
+
+        $fdlContext->setFileFormat('FDL.camt.054.001.xx.stm');
+
+        return $this->createFDL($context);
     }
 
     public function createZ52(RequestContext $context): Request
@@ -94,7 +123,11 @@ final class RequestFactoryV24 extends RequestFactoryV2
 
     public function createZSR(RequestContext $context): Request
     {
-        throw new LogicException('Method not implemented yet for EBICS 2.4');
+        $fdlContext = $context->getFdlContext();
+
+        $fdlContext->setFileFormat('FDL.pain.002.001.xx.psr');
+
+        return $this->createFDL($context);
     }
 
     public function createXEK(RequestContext $context): Request
@@ -134,6 +167,10 @@ final class RequestFactoryV24 extends RequestFactoryV2
 
     public function createYCT(UploadTransaction $transaction, RequestContext $context): Request
     {
-        throw new LogicException('Method not implemented yet for EBICS 2.4');
+        $fulContext = $context->getFdlContext();
+
+        $fulContext->setFileFormat('FUL.pain.001.001.xx.mct');
+
+        return $this->createFUL($transaction, $context);
     }
 }

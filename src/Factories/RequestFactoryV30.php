@@ -193,6 +193,18 @@ final class RequestFactoryV30 extends RequestFactory
         return $this->createBTD($context);
     }
 
+    public function createBKA(RequestContext $context): Request
+    {
+        $btdContext = $context->getBTDContext();
+
+        $btdContext->setServiceName('EOP');
+        $btdContext->setScope('BIL');
+        $btdContext->setMsgName('pdf');
+        $btdContext->setContainerType('ZIP');
+
+        return $this->createBTD($context);
+    }
+
     public function createC52(RequestContext $context): Request
     {
         $btdContext = $context->getBTDContext();

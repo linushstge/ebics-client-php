@@ -179,6 +179,21 @@ interface EbicsClientInterface
     ): DownloadOrderResult;
 
     /**
+     * Download electronic account statement in pdf format.
+     *
+     * @param DateTimeInterface|null $startDateTime the start date of requested transactions
+     * @param DateTimeInterface|null $endDateTime the end date of requested transactions
+     * @param RequestContext|null $context
+     *
+     * @return DownloadOrderResult
+     */
+    public function BKA(
+        DateTimeInterface $startDateTime = null,
+        DateTimeInterface $endDateTime = null,
+        RequestContext $context = null
+    ): DownloadOrderResult;
+
+    /**
      * Download the bank account report in camt.052 format.
      *
      * @param DateTimeInterface|null $startDateTime the start date of requested transactions

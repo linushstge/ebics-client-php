@@ -429,6 +429,34 @@ class EbicsClientV25Test extends AbstractEbicsTestCase
     /**
      * @dataProvider serversDataProvider
      *
+     * @group BKA
+     *
+     * @param int $credentialsId
+     * @param array $codes
+     *
+     * @covers
+     */
+    public function testBKA(int $credentialsId, array $codes)
+    {
+        $client = $this->setupClientV25($credentialsId, $codes['BKA']['fake']);
+
+        $this->assertExceptionCode($codes['BKA']['code']);
+        $bka = $client->BKA(new DateTime('2020-03-21'), new DateTime('2020-04-21'));
+
+        $responseHandler = $client->getResponseHandler();
+        $code = $responseHandler->retrieveH00XReturnCode($bka->getTransaction()->getLastSegment()->getResponse());
+        $reportText = $responseHandler->retrieveH00XReportText($bka->getTransaction()->getLastSegment()->getResponse());
+        $this->assertResponseOk($code, $reportText);
+
+        $code = $responseHandler->retrieveH00XReturnCode($bka->getTransaction()->getReceipt());
+        $reportText = $responseHandler->retrieveH00XReportText($bka->getTransaction()->getReceipt());
+
+        $this->assertResponseDone($code, $reportText);
+    }
+
+    /**
+     * @dataProvider serversDataProvider
+     *
      * @group C52
      *
      * @param int $credentialsId
@@ -1085,6 +1113,7 @@ class EbicsClientV25Test extends AbstractEbicsTestCase
                     'PTK' => ['code' => null, 'fake' => false],
                     'VMK' => ['code' => '090003', 'fake' => false],
                     'STA' => ['code' => '090003', 'fake' => false],
+                    'BKA' => ['code' => '091005', 'fake' => false],
                     'Z52' => ['code' => '090005', 'fake' => false],
                     'Z53' => ['code' => '090005', 'fake' => false],
                     'Z54' => ['code' => '090005', 'fake' => false],
@@ -1130,6 +1159,7 @@ class EbicsClientV25Test extends AbstractEbicsTestCase
                     'PTK' => ['code' => '090005', 'fake' => false],
                     'VMK' => ['code' => '061002', 'fake' => false],
                     'STA' => ['code' => '061002', 'fake' => false],
+                    'BKA' => ['code' => '061002', 'fake' => false],
                     'Z52' => ['code' => '061002', 'fake' => false],
                     'Z53' => ['code' => '061002', 'fake' => false],
                     'Z54' => ['code' => '061002', 'fake' => false],
@@ -1176,6 +1206,7 @@ class EbicsClientV25Test extends AbstractEbicsTestCase
                     'PTK' => ['code' => null, 'fake' => false],
                     'VMK' => ['code' => '090003', 'fake' => false],
                     'STA' => ['code' => '090003', 'fake' => false],
+                    'BKA' => ['code' => '091005', 'fake' => false],
                     'Z52' => ['code' => '090005', 'fake' => false],
                     'Z53' => ['code' => '090005', 'fake' => false],
                     'Z54' => ['code' => '090005', 'fake' => false],
@@ -1221,6 +1252,7 @@ class EbicsClientV25Test extends AbstractEbicsTestCase
                     'PTK' => ['code' => null, 'fake' => false],
                     'VMK' => ['code' => '090005', 'fake' => false],
                     'STA' => ['code' => '090005', 'fake' => false],
+                    'BKA' => ['code' => '091005', 'fake' => false],
                     'Z52' => ['code' => '090005', 'fake' => false],
                     'Z53' => ['code' => '090005', 'fake' => false],
                     'Z54' => ['code' => '090005', 'fake' => false],
@@ -1266,6 +1298,7 @@ class EbicsClientV25Test extends AbstractEbicsTestCase
                     'PTK' => ['code' => null, 'fake' => false],
                     'VMK' => ['code' => '090003', 'fake' => false],
                     'STA' => ['code' => '090003', 'fake' => false],
+                    'BKA' => ['code' => '091005', 'fake' => false],
                     'Z52' => ['code' => '090005', 'fake' => false],
                     'Z53' => ['code' => '090005', 'fake' => false],
                     'Z54' => ['code' => '090005', 'fake' => false],

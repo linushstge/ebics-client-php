@@ -169,6 +169,7 @@ try {
 | FUL         | Upload the files to the bank.                                                                                     |
 | VMK         | Download the interim transaction report in SWIFT format (MT942).                                                  |
 | STA         | Download the bank account statement.                                                                              |
+| BKA         | Download electronic account statement in pdf format.                                                              |
 | C52         | Download the bank account report in Camt.052 format.                                                              |
 | C53         | Download the bank account statement in Camt.053 format.                                                           |
 | C54         | Download Debit Credit Notification (DTI).                                                                         |

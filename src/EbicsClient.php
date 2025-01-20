@@ -419,6 +419,28 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws Exceptions\EbicsException
      */
+    public function BKA(
+        DateTimeInterface $startDateTime = null,
+        DateTimeInterface $endDateTime = null,
+        RequestContext $context = null
+    ): DownloadOrderResult {
+        $context = $this->requestFactory->prepareDownloadContext($context)
+            ->setStartDateTime($startDateTime)
+            ->setEndDateTime($endDateTime);
+
+        $transaction = $this->downloadTransaction(
+            function () use ($context) {
+                return $this->requestFactory->createBKA($context);
+            }
+        );
+
+        return $this->createDownloadOrderResult($transaction, self::FILE_PARSER_FORMAT_TEXT);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws Exceptions\EbicsException
+     */
     public function C52(
         DateTimeInterface $startDateTime = null,
         DateTimeInterface $endDateTime = null,

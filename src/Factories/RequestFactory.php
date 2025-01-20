@@ -728,6 +728,8 @@ abstract class RequestFactory
 
     abstract public function createSTA(RequestContext $context): Request;
 
+    abstract public function createBKA(RequestContext $context): Request;
+
     abstract public function createC52(RequestContext $context): Request;
 
     abstract public function createC53(RequestContext $context): Request;
