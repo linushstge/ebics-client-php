@@ -9,7 +9,7 @@ use EbicsApi\Ebics\Handlers\Traits\H005Trait;
 use EbicsApi\Ebics\Models\Crypt\X509;
 use EbicsApi\Ebics\Models\CustomerHIA;
 use EbicsApi\Ebics\Models\CustomerINI;
-use EbicsApi\Ebics\Models\Document;
+use EbicsApi\Ebics\Models\XmlDocument;
 use EbicsApi\Ebics\Services\DOMHelper;
 use RuntimeException;
 
@@ -60,7 +60,7 @@ final class OrderDataHandlerV30 extends OrderDataHandler
         // Is not need for V3.
     }
 
-    public function retrieveAuthenticationSignature(Document $document): SignatureInterface
+    public function retrieveAuthenticationSignature(XmlDocument $document): SignatureInterface
     {
         $h00x = $this->getH00XVersion();
         $xpath = $this->prepareH00XXPath($document);
@@ -74,8 +74,8 @@ final class OrderDataHandlerV30 extends OrderDataHandler
         }
 
         $certificateContent
-            = "-----BEGIN CERTIFICATE-----\n".
-            chunk_split($x509CertificateValue, 64).
+            = "-----BEGIN CERTIFICATE-----\n" .
+            chunk_split($x509CertificateValue, 64) .
             "-----END CERTIFICATE-----\n";
 
         $x509 = new X509();
@@ -93,7 +93,7 @@ final class OrderDataHandlerV30 extends OrderDataHandler
         return $signature;
     }
 
-    public function retrieveEncryptionSignature(Document $document): SignatureInterface
+    public function retrieveEncryptionSignature(XmlDocument $document): SignatureInterface
     {
         $h00x = $this->getH00XVersion();
         $xpath = $this->prepareH00XXPath($document);
@@ -107,8 +107,8 @@ final class OrderDataHandlerV30 extends OrderDataHandler
         }
 
         $certificateContent
-            = "-----BEGIN CERTIFICATE-----\n".
-            chunk_split($x509CertificateValue, 64).
+            = "-----BEGIN CERTIFICATE-----\n" .
+            chunk_split($x509CertificateValue, 64) .
             "-----END CERTIFICATE-----\n";
 
         $x509 = new X509();

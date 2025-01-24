@@ -10,17 +10,17 @@ namespace EbicsApi\Ebics\Models;
  */
 final class InitializationOrderResult extends OrderResult
 {
-    private Document $dataDocument;
+    private XmlDocument $document;
     private InitializationTransaction $transaction;
 
-    public function setDataDocument(Document $document): void
+    public function setDocument(XmlDocument $document): void
     {
-        $this->dataDocument = $document;
+        $this->document = $document;
     }
 
-    public function getDataDocument(): ?Document
+    public function getDocument(): ?XmlDocument
     {
-        return $this->dataDocument;
+        return $this->document;
     }
 
     public function setTransaction(InitializationTransaction $transaction): void

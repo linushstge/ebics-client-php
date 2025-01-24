@@ -210,7 +210,7 @@ class EbicsClientV24Test extends AbstractEbicsTestCase
 
             $ful = $client->FUL(
                 $context,
-                $documentFactory->create($code['document'])
+                $documentFactory->createXml($code['document'])
             );
 
             $responseHandler = $client->getResponseHandler();

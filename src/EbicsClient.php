@@ -36,7 +36,6 @@ use EbicsApi\Ebics\Factories\TransactionFactory;
 use EbicsApi\Ebics\Handlers\OrderDataHandler;
 use EbicsApi\Ebics\Handlers\ResponseHandler;
 use EbicsApi\Ebics\Models\Bank;
-use EbicsApi\Ebics\Models\Document;
 use EbicsApi\Ebics\Models\DownloadOrderResult;
 use EbicsApi\Ebics\Models\DownloadSegment;
 use EbicsApi\Ebics\Models\DownloadTransaction;
@@ -256,8 +255,8 @@ final class EbicsClient implements EbicsClientInterface
 
         $orderResult = $this->createInitializationOrderResult($transaction);
 
-        $signatureX = $this->orderDataHandler->retrieveAuthenticationSignature($orderResult->getDataDocument());
-        $signatureE = $this->orderDataHandler->retrieveEncryptionSignature($orderResult->getDataDocument());
+        $signatureX = $this->orderDataHandler->retrieveAuthenticationSignature($orderResult->getDocument());
+        $signatureE = $this->orderDataHandler->retrieveEncryptionSignature($orderResult->getDocument());
         $this->keyring->setBankSignatureX($signatureX);
         $this->keyring->setBankSignatureE($signatureE);
 
@@ -1208,7 +1207,7 @@ final class EbicsClient implements EbicsClientInterface
         $orderResult = $this->orderResultFactory->createInitializationOrderResult();
         $orderResult->setTransaction($transaction);
         $orderResult->setData($transaction->getOrderData());
-        $orderResult->setDataDocument($this->extractOrderDataDocument($orderResult->getData()));
+        $orderResult->setDocument($this->documentFactory->createXml($orderResult->getData()));
 
         return $orderResult;
     }
@@ -1225,13 +1224,14 @@ final class EbicsClient implements EbicsClientInterface
             case self::FILE_PARSER_FORMAT_TEXT:
                 break;
             case self::FILE_PARSER_FORMAT_XML:
-                $orderResult->setDataDocument($this->extractOrderDataDocument($orderResult->getData()));
+                $orderResult->setDocument($this->documentFactory->createXml($orderResult->getData()));
                 break;
             case self::FILE_PARSER_FORMAT_XML_FILES:
-                $orderResult->setDataFiles($this->extractOrderDataXmlFiles($orderResult->getData()));
+                $files = $this->xmlService->extractFilesFromString($orderResult->getData());
+                $orderResult->setDataFiles($this->documentFactory->createMultipleXml($files));
                 break;
             case self::FILE_PARSER_FORMAT_ZIP_FILES:
-                $orderResult->setDataFiles($this->extractOrderDataZipFiles($orderResult->getData()));
+                $orderResult->setDataFiles($this->zipService->extractFilesFromString($orderResult->getData()));
                 break;
             default:
                 throw new LogicException('Incorrect format');
@@ -1261,29 +1261,6 @@ final class EbicsClient implements EbicsClientInterface
         $orderResult->setData($es);
 
         return $orderResult;
-    }
-
-    private function extractOrderDataDocument(string $orderData): Document
-    {
-        return $this->documentFactory->create($orderData);
-    }
-
-    /**
-     * @return Document[]
-     */
-    private function extractOrderDataXmlFiles(string $orderData): array
-    {
-        $files = $this->xmlService->extractFilesFromString($orderData);
-
-        return $this->documentFactory->createMultiple($files);
-    }
-
-    /**
-     * @return string[]
-     */
-    private function extractOrderDataZipFiles(string $orderData): array
-    {
-        return $this->zipService->extractFilesFromString($orderData);
     }
 
     /**

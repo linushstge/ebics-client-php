@@ -7,12 +7,14 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMNodeList;
+use EbicsApi\Ebics\Contracts\OrderDataInterface;
 use EbicsApi\Ebics\Contracts\SignatureInterface;
 use EbicsApi\Ebics\Handlers\Traits\H00XTrait;
 use EbicsApi\Ebics\Models\Crypt\X509;
 use EbicsApi\Ebics\Models\CustomerHIA;
 use EbicsApi\Ebics\Models\CustomerINI;
-use EbicsApi\Ebics\Models\Document;
+use EbicsApi\Ebics\Models\XmlData;
+use EbicsApi\Ebics\Models\XmlDocument;
 use EbicsApi\Ebics\Services\DOMHelper;
 
 /**
@@ -97,7 +99,7 @@ abstract class OrderDataHandlerV2 extends OrderDataHandler
         $xmlPubKeyValue->appendChild($xmlTimeStamp);
     }
 
-    public function retrieveAuthenticationSignature(Document $document): SignatureInterface
+    public function retrieveAuthenticationSignature(XmlDocument $document): SignatureInterface
     {
         $h00x = $this->getH00XVersion();
         $xpath = $this->prepareH00XXPath($document);
@@ -140,7 +142,7 @@ abstract class OrderDataHandlerV2 extends OrderDataHandler
         return $signature;
     }
 
-    public function retrieveEncryptionSignature(Document $document): SignatureInterface
+    public function retrieveEncryptionSignature(XmlData $document): SignatureInterface
     {
         $h00x = $this->getH00XVersion();
         $xpath = $this->prepareH00XXPath($document);

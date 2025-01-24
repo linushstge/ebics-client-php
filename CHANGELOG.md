@@ -1,5 +1,6 @@
 ## 2.4
 
+* Add support upload txt file.
 * Added `BKA` order type.
 * Optimized upload transaction.
 * Fix decryption for data.

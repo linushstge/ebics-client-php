@@ -11,11 +11,11 @@ namespace EbicsApi\Ebics\Models;
 final class DownloadOrderResult extends OrderResult
 {
     private array $dataFiles;
-    private Document $dataDocument;
+    private XmlDocument $document;
     private DownloadTransaction $transaction;
 
     /**
-     * @param Document[]|string[] $dataFiles
+     * @param XmlDocument[]|string[] $dataFiles
      *
      * @return void
      */
@@ -25,21 +25,21 @@ final class DownloadOrderResult extends OrderResult
     }
 
     /**
-     * @return Document[]|string[]|null
+     * @return XmlDocument[]|string[]|null
      */
     public function getDataFiles(): ?array
     {
         return $this->dataFiles;
     }
 
-    public function setDataDocument(Document $document): void
+    public function setDocument(XmlDocument $document): void
     {
-        $this->dataDocument = $document;
+        $this->document = $document;
     }
 
-    public function getDataDocument(): ?Document
+    public function getDocument(): ?XmlDocument
     {
-        return $this->dataDocument;
+        return $this->document;
     }
 
     public function setTransaction(DownloadTransaction $transaction): void

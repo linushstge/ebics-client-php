@@ -8,6 +8,6 @@ namespace EbicsApi\Ebics\Models;
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
-final class DOMDocument extends \DOMDocument
+abstract class DOMDocument extends \DOMDocument
 {
 }

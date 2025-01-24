@@ -53,8 +53,12 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
         $hpb = $client->HPB();
 
         $responseHandler = $client->getResponseHandler();
-        $code = $responseHandler->retrieveH00XReturnCode($hpb->getTransaction()->getInitializationSegment()->getResponse());
-        $reportText = $responseHandler->retrieveH00XReportText($hpb->getTransaction()->getInitializationSegment()->getResponse());
+        $code = $responseHandler->retrieveH00XReturnCode(
+            $hpb->getTransaction()->getInitializationSegment()->getResponse()
+        );
+        $reportText = $responseHandler->retrieveH00XReportText(
+            $hpb->getTransaction()->getInitializationSegment()->getResponse()
+        );
         $this->assertResponseOk($code, $reportText);
     }
 
@@ -74,9 +78,9 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
         $client = $this->setupClientV30($credentialsId, $codes['INI']['fake']);
 
         $client->createUserSignatures('A005', [
-            'privatekey' => file_get_contents($this->data.'/electronic_signature/user.key'),
-            'certificate' => file_get_contents($this->data.'/electronic_signature/user.crt'),
-            'password' => file_get_contents($this->data.'/electronic_signature/passphrase.txt'),
+            'privatekey' => file_get_contents($this->data . '/electronic_signature/user.key'),
+            'certificate' => file_get_contents($this->data . '/electronic_signature/user.crt'),
+            'password' => file_get_contents($this->data . '/electronic_signature/passphrase.txt'),
         ]);
 
         // Check that keyring is empty and or wait on success or wait on exception.
@@ -239,8 +243,12 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
         $hpb = $client->HPB();
 
         $responseHandler = $client->getResponseHandler();
-        $code = $responseHandler->retrieveH00XReturnCode($hpb->getTransaction()->getInitializationSegment()->getResponse());
-        $reportText = $responseHandler->retrieveH00XReportText($hpb->getTransaction()->getInitializationSegment()->getResponse());
+        $code = $responseHandler->retrieveH00XReturnCode(
+            $hpb->getTransaction()->getInitializationSegment()->getResponse()
+        );
+        $reportText = $responseHandler->retrieveH00XReportText(
+            $hpb->getTransaction()->getInitializationSegment()->getResponse()
+        );
         $this->assertResponseOk($code, $reportText);
         $this->saveKeyring($credentialsId, $client->getKeyring());
     }
@@ -268,7 +276,9 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
         $responseHandler = $client->getResponseHandler();
 
         $code = $responseHandler->retrieveH00XReturnCode($spr->getTransaction()->getInitialization()->getResponse());
-        $reportText = $responseHandler->retrieveH00XReportText($spr->getTransaction()->getInitialization()->getResponse());
+        $reportText = $responseHandler->retrieveH00XReportText(
+            $spr->getTransaction()->getInitialization()->getResponse()
+        );
 
         $this->assertResponseOk($code, $reportText);
     }
@@ -550,9 +560,11 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
             new DateTime('2020-03-21'),
             new DateTime('2020-04-21'),
             (new RequestContext())
-                ->setBTDContext((new BTDContext())
-                    ->setScope($codes['Z54']['params']['s'])
-                    ->setMsgNameVersion($codes['Z54']['params']['mnv']))
+                ->setBTDContext(
+                    (new BTDContext())
+                        ->setScope($codes['Z54']['params']['s'])
+                        ->setMsgNameVersion($codes['Z54']['params']['mnv'])
+                )
         );
 
         $responseHandler = $client->getResponseHandler();
@@ -668,7 +680,52 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
         $this->assertResponseOk($code, $reportText);
 
         $code = $responseHandler->retrieveH00XReturnCode($btu->getTransaction()->getInitialization()->getResponse());
-        $reportText = $responseHandler->retrieveH00XReportText($btu->getTransaction()->getInitialization()->getResponse());
+        $reportText = $responseHandler->retrieveH00XReportText(
+            $btu->getTransaction()->getInitialization()->getResponse()
+        );
+
+        $this->assertResponseOk($code, $reportText);
+    }
+
+    /**
+     * @dataProvider serversDataProvider
+     *
+     * @group CSV
+     * @group V3
+     * @group CSV-V3
+     *
+     * @param int $credentialsId
+     * @param array $codes
+     *
+     * @covers
+     */
+    public function testCSV(int $credentialsId, array $codes)
+    {
+        $client = $this->setupClientV30($credentialsId, $codes['CSV']['fake']);
+
+        $this->assertExceptionCode($codes['CSV']['code']);
+
+        $orderData = (new DocumentFactory())->createTxt("Username;Identifier\r\nbooker12;9012");
+
+        // CSV
+        $context = new BTUContext();
+        $context->setServiceName('OTH');
+        $context->setScope('BIL');
+        $context->setMsgName('csv');
+        $context->setServiceOption('CH002LMF');
+        $context->setFileName('file.csv');
+
+        $btu = $client->BTU($context, $orderData);
+
+        $responseHandler = $client->getResponseHandler();
+        $code = $responseHandler->retrieveH00XReturnCode($btu->getTransaction()->getLastSegment()->getResponse());
+        $reportText = $responseHandler->retrieveH00XReportText($btu->getTransaction()->getLastSegment()->getResponse());
+        $this->assertResponseOk($code, $reportText);
+
+        $code = $responseHandler->retrieveH00XReturnCode($btu->getTransaction()->getInitialization()->getResponse());
+        $reportText = $responseHandler->retrieveH00XReportText(
+            $btu->getTransaction()->getInitialization()->getResponse()
+        );
 
         $this->assertResponseOk($code, $reportText);
     }
@@ -692,13 +749,17 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
         $this->assertExceptionCode($codes['XE3']['code']);
 
         $documentFactory = new DocumentFactory();
-        $orderData = $documentFactory->create(file_get_contents($this->fixtures.'/yct.pain001.xml'));
+        $orderData = $documentFactory->createXml(file_get_contents($this->fixtures . '/yct.pain001.xml'));
 
-        $xe3 = $client->XE3($orderData, (new RequestContext())
-            ->setBTUContext((new BTUContext())
-                ->setScope($codes['XE3']['params']['s'])
-                ->setMsgNameVersion($codes['XE3']['params']['mnv'])
-            ));
+        $xe3 = $client->XE3(
+            $orderData,
+            (new RequestContext())
+                ->setBTUContext(
+                    (new BTUContext())
+                        ->setScope($codes['XE3']['params']['s'])
+                        ->setMsgNameVersion($codes['XE3']['params']['mnv'])
+                )
+        );
 
         $responseHandler = $client->getResponseHandler();
         $code = $responseHandler->retrieveH00XReturnCode($xe3->getTransaction()->getLastSegment()->getResponse());
@@ -706,7 +767,9 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
         $this->assertResponseOk($code, $reportText);
 
         $code = $responseHandler->retrieveH00XReturnCode($xe3->getTransaction()->getInitialization()->getResponse());
-        $reportText = $responseHandler->retrieveH00XReportText($xe3->getTransaction()->getInitialization()->getResponse());
+        $reportText = $responseHandler->retrieveH00XReportText(
+            $xe3->getTransaction()->getInitialization()->getResponse()
+        );
 
         $this->assertResponseOk($code, $reportText);
     }
@@ -730,7 +793,7 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
         $this->assertExceptionCode($codes['YCT']['code']);
 
         $documentFactory = new DocumentFactory();
-        $orderData = $documentFactory->create(file_get_contents($this->fixtures.'/yct.pain001.xml'));
+        $orderData = $documentFactory->createXml(file_get_contents($this->fixtures . '/yct.pain001.xml'));
 
         $yct = $client->YCT($orderData);
 
@@ -740,7 +803,9 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
         $this->assertResponseOk($code, $reportText);
 
         $code = $responseHandler->retrieveH00XReturnCode($yct->getTransaction()->getInitialization()->getResponse());
-        $reportText = $responseHandler->retrieveH00XReportText($yct->getTransaction()->getInitialization()->getResponse());
+        $reportText = $responseHandler->retrieveH00XReportText(
+            $yct->getTransaction()->getInitialization()->getResponse()
+        );
 
         $this->assertResponseOk($code, $reportText);
     }
@@ -841,7 +906,9 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
         $this->assertResponseOk($code, $reportText);
 
         $code = $responseHandler->retrieveH00XReturnCode($hve->getTransaction()->getInitialization()->getResponse());
-        $reportText = $responseHandler->retrieveH00XReportText($hve->getTransaction()->getInitialization()->getResponse());
+        $reportText = $responseHandler->retrieveH00XReportText(
+            $hve->getTransaction()->getInitialization()->getResponse()
+        );
 
         $this->assertResponseDone($code, $reportText);
     }
@@ -960,6 +1027,7 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
                     'XEK' => ['code' => '091005', 'fake' => false],
                     'BTD' => ['code' => '090005', 'fake' => false],
                     'BTU' => ['code' => null, 'fake' => false],
+                    'CSV' => ['code' => null, 'fake' => false],
                     'XE3' => ['code' => null, 'fake' => false, 'params' => ['mnv' => '02', 's' => 'CH']],
                     'YCT' => ['code' => '091005', 'fake' => false],
                     'HPD' => ['code' => null, 'fake' => false],
@@ -989,6 +1057,7 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
                     'XEK' => ['code' => '091005', 'fake' => false],
                     'BTD' => ['code' => '090005', 'fake' => false],
                     'BTU' => ['code' => null, 'fake' => false],
+                    'CSV' => ['code' => '091005', 'fake' => false],
                     'XE3' => ['code' => null, 'fake' => false, 'params' => ['mnv' => '02', 's' => 'CH']],
                     'YCT' => ['code' => '091005', 'fake' => false],
                     'HPD' => ['code' => null, 'fake' => false],

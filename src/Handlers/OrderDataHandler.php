@@ -16,9 +16,9 @@ use EbicsApi\Ebics\Handlers\Traits\H00XTrait;
 use EbicsApi\Ebics\Models\CustomerH3K;
 use EbicsApi\Ebics\Models\CustomerHIA;
 use EbicsApi\Ebics\Models\CustomerINI;
-use EbicsApi\Ebics\Models\Document;
 use EbicsApi\Ebics\Models\Keyring;
 use EbicsApi\Ebics\Models\User;
+use EbicsApi\Ebics\Models\XmlDocument;
 use EbicsApi\Ebics\Services\CryptService;
 
 /**
@@ -277,11 +277,13 @@ abstract class OrderDataHandler
         // Add ds:X509Certificate to ds:X509Data.
         $xmlX509Certificate = $xml->createElement('ds:X509Certificate');
         $certificateContent = $certificate->getCertificateContent();
-        $certificateContent = trim(str_replace(
-            ['-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', "\n", "\r"],
-            '',
-            $certificateContent
-        ));
+        $certificateContent = trim(
+            str_replace(
+                ['-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', "\n", "\r"],
+                '',
+                $certificateContent
+            )
+        );
         $xmlX509Certificate->nodeValue = $certificateContent;
         $xmlX509Data->appendChild($xmlX509Certificate);
     }
@@ -309,10 +311,10 @@ abstract class OrderDataHandler
     /**
      * Extract Authentication Certificate from the $orderData.
      */
-    abstract public function retrieveAuthenticationSignature(Document $document): SignatureInterface;
+    abstract public function retrieveAuthenticationSignature(XmlDocument $document): SignatureInterface;
 
     /**
      * Extract Encryption Certificate from the $orderData.
      */
-    abstract public function retrieveEncryptionSignature(Document $document): SignatureInterface;
+    abstract public function retrieveEncryptionSignature(XmlDocument $document): SignatureInterface;
 }

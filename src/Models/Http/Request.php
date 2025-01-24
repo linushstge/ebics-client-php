@@ -2,8 +2,7 @@
 
 namespace EbicsApi\Ebics\Models\Http;
 
-use EbicsApi\Ebics\Models\Data;
-use LogicException;
+use EbicsApi\Ebics\Models\XmlData;
 
 /**
  * Class Request represents Request model.
@@ -11,18 +10,6 @@ use LogicException;
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
-final class Request extends Data
+final class Request extends XmlData
 {
-    public function outputFormatted(): string
-    {
-        $this->preserveWhiteSpace = false;
-        $this->formatOutput = true;
-
-        $xml = $this->saveXML();
-        if (false === $xml) {
-            throw new LogicException('XML was not saved');
-        }
-
-        return $xml;
-    }
 }
