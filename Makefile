@@ -1,4 +1,4 @@
-WIN_ETH_DRIVER := 'Ethernet adapter Ethernet 3'
+WIN_ETH_DRIVER := 'Ethernet adapter Ethernet'
 
 ifdef WIN_ETH_DRIVER
 WIN_ETH_IP := $(shell ipconfig.exe | grep ${WIN_ETH_DRIVER} -A3 | cut -d':' -f 2 | tail -n1 | sed -e 's/\s*//g')

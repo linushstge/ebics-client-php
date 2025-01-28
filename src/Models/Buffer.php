@@ -45,7 +45,9 @@ final class Buffer implements BufferInterface
 
     public function close(): void
     {
-        fclose($this->stream);
+        if (is_resource($this->stream)) {
+            fclose($this->stream);
+        }
     }
 
     public function rewind(): void

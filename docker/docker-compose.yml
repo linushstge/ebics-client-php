@@ -1,5 +1,3 @@
-version: '3.2'
-
 services:
   php-cli-ebics-client-php:
     container_name: php-cli-ebics-client-php
