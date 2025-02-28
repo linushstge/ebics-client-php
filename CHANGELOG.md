@@ -1,5 +1,6 @@
 ## 2.4
 
+* Support specify custom keyring details for Authorization & Encryption.
 * Add support upload txt file.
 * Added `BKA` order type.
 * Optimized upload transaction.

@@ -77,10 +77,23 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
     {
         $client = $this->setupClientV30($credentialsId, $codes['INI']['fake']);
 
-        $client->createUserSignatures('A005', [
-            'privatekey' => file_get_contents($this->data . '/electronic_signature/user.key'),
-            'certificate' => file_get_contents($this->data . '/electronic_signature/user.crt'),
-            'password' => file_get_contents($this->data . '/electronic_signature/passphrase.txt'),
+        $client->createUserSignatures([
+            'a_version' => 'A005',
+            'a_details' => [
+                'privatekey' => file_get_contents($this->data . '/certificates/electronic_signature/user.key'),
+                'certificate' => file_get_contents($this->data . '/certificates/electronic_signature/user.crt'),
+                'password' => file_get_contents($this->data . '/certificates/electronic_signature/passphrase.txt'),
+            ],
+            'e_details' => [
+                'privatekey' => file_get_contents($this->data . '/certificates/authorization_encryption/user.key'),
+                'certificate' => file_get_contents($this->data . '/certificates/authorization_encryption/user.crt'),
+                'password' => file_get_contents($this->data . '/certificates/authorization_encryption/passphrase.txt'),
+            ],
+            'x_details' => [
+                'privatekey' => file_get_contents($this->data . '/certificates/authorization_encryption/user.key'),
+                'certificate' => file_get_contents($this->data . '/certificates/authorization_encryption/user.crt'),
+                'password' => file_get_contents($this->data . '/certificates/authorization_encryption/passphrase.txt'),
+            ],
         ]);
 
         // Check that keyring is empty and or wait on success or wait on exception.

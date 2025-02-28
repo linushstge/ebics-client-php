@@ -150,18 +150,16 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws EbicsException
      */
-    public function createUserSignatures(
-        string $aVersion = SignatureInterface::A_VERSION6,
-        array $aDetails = null
-    ): void {
-        $signatureA = $this->createUserSignature(SignatureInterface::TYPE_A, $aDetails);
-        $this->keyring->setUserSignatureAVersion($aVersion);
+    public function createUserSignatures(array $options = null): void
+    {
+        $signatureA = $this->createUserSignature(SignatureInterface::TYPE_A, $options['a_details'] ?? null);
+        $this->keyring->setUserSignatureAVersion($options['a_version'] ?? SignatureInterface::A_VERSION6);
         $this->keyring->setUserSignatureA($signatureA);
 
-        $signatureE = $this->createUserSignature(SignatureInterface::TYPE_E);
+        $signatureE = $this->createUserSignature(SignatureInterface::TYPE_E, $options['e_details'] ?? null);
         $this->keyring->setUserSignatureE($signatureE);
 
-        $signatureX = $this->createUserSignature(SignatureInterface::TYPE_X);
+        $signatureX = $this->createUserSignature(SignatureInterface::TYPE_X, $options['x_details'] ?? null);
         $this->keyring->setUserSignatureX($signatureX);
     }
 
