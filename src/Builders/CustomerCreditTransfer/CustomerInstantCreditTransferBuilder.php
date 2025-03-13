@@ -44,8 +44,8 @@ final class CustomerInstantCreditTransferBuilder
         string $debttorIban,
         string $debitorName,
         bool $batchBooking = true,
-        string $msgId = null,
-        string $paymentReference = null
+        ?string $msgId = null,
+        ?string $paymentReference = null
     ): CustomerInstantCreditTransferBuilder {
         $this->instance = new CustomerCreditTransfer();
         $now = new DateTime();
@@ -197,8 +197,8 @@ final class CustomerInstantCreditTransferBuilder
         float $amount,
         string $currency,
         string $purpose,
-        string $endToEndId = null,
-        string $purposeCode = null
+        ?string $endToEndId = null,
+        ?string $purposeCode = null
     ): CustomerInstantCreditTransferBuilder {
         $xpath = $this->prepareXPath($this->instance);
         $nbOfTxsList = $xpath->query('//CstmrCdtTrfInitn/PmtInf/NbOfTxs');

@@ -10,7 +10,7 @@ namespace EbicsApi\Ebics\Builders\Request;
  */
 final class DataTransferBuilderV2 extends DataTransferBuilder
 {
-    public function addDataDigest(string $signatureVersion, string $digest = null): DataTransferBuilder
+    public function addDataDigest(string $signatureVersion, ?string $digest = null): DataTransferBuilder
     {
         // Skipped.
         return $this;

@@ -53,10 +53,10 @@ final class CustomerCreditTransferBuilder
         string $debitorFinInstBIC,
         string $debitorIBAN,
         string $debitorName,
-        DateTime $executionDate = null,
+        ?DateTime $executionDate = null,
         bool $batchBooking = true,
-        string $msgId = null,
-        string $paymentReference = null
+        ?string $msgId = null,
+        ?string $paymentReference = null
     ): CustomerCreditTransferBuilder {
         $this->instance = new CustomerCreditTransfer();
         $now = new DateTime();
@@ -191,8 +191,8 @@ final class CustomerCreditTransferBuilder
 
     private function createCreditTransferTransactionElement(
         float $amount,
-        string $instrId = null,
-        string $endToEndId = null
+        ?string $instrId = null,
+        ?string $endToEndId = null
     ): DOMElement {
         $xpath = $this->prepareXPath($this->instance);
         $nbOfTxsList = $xpath->query('//CstmrCdtTrfInitn//GrpHdr/NbOfTxs');
@@ -257,7 +257,7 @@ final class CustomerCreditTransferBuilder
         string $creditorIBAN,
         string $creditorName,
         ?PostalAddressInterface $postalAddress,
-        string $purpose = null
+        ?string $purpose = null
     ): void {
         //agent
         if ($creditorFinInstBIC !== null) {
@@ -312,7 +312,7 @@ final class CustomerCreditTransferBuilder
         ?PostalAddressInterface $postalAddress,
         float $amount,
         string $currency,
-        string $purpose = null
+        ?string $purpose = null
     ): CustomerCreditTransferBuilder {
         if ($currency !== 'EUR') {
             throw new InvalidArgumentException('The SEPA transaction is restricted to EUR currency.');
@@ -334,7 +334,7 @@ final class CustomerCreditTransferBuilder
         ?PostalAddressInterface $postalAddress,
         float $amount,
         string $currency,
-        string $purpose = null
+        ?string $purpose = null
     ): CustomerCreditTransferBuilder {
         if ($currency !== 'EUR') {
             throw new InvalidArgumentException('The SEPA transaction is restricted to EUR currency.');
@@ -378,7 +378,7 @@ final class CustomerCreditTransferBuilder
         ?PostalAddressInterface $postalAddress,
         float $amount,
         string $currency,
-        string $purpose = null
+        ?string $purpose = null
     ): CustomerCreditTransferBuilder {
         $xmlCdtTrfTxInf = $this->createCreditTransferTransactionElement($amount);
 

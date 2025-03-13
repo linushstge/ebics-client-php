@@ -99,7 +99,7 @@ abstract class StaticBuilder
         return $this;
     }
 
-    abstract public function addOrderDetails(Closure $callable = null): StaticBuilder;
+    abstract public function addOrderDetails(?Closure $callable = null): StaticBuilder;
 
     public function addNumSegments(int $numSegments): StaticBuilder
     {

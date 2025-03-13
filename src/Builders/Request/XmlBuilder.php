@@ -93,7 +93,7 @@ abstract class XmlBuilder
 
     abstract public function addHeader(Closure $callback): XmlBuilder;
 
-    abstract public function addBody(Closure $callback = null): XmlBuilder;
+    abstract public function addBody(?Closure $callback = null): XmlBuilder;
 
     public function addHostId(string $hostId): XmlBuilder
     {

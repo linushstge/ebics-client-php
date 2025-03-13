@@ -47,7 +47,7 @@ final class MutableBuilder
         return $this;
     }
 
-    public function addSegmentNumber(int $segmentNumber = null, ?bool $isLastSegment = null): MutableBuilder
+    public function addSegmentNumber(?int $segmentNumber = null, ?bool $isLastSegment = null): MutableBuilder
     {
         if (null !== $segmentNumber) {
             $xmlSegmentNumber = $this->dom->createElement('SegmentNumber');

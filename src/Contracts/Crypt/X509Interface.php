@@ -87,7 +87,7 @@ interface X509Interface
         $value,
         bool $critical = false,
         bool $replace = true,
-        string $path = null
+        ?string $path = null
     );
 
     /**
@@ -216,5 +216,5 @@ interface X509Interface
      *
      * @return mixed
      */
-    public function getAttribute(string $id, int $disposition = X509::ATTR_ALL, array $csr = null);
+    public function getAttribute(string $id, int $disposition = X509::ATTR_ALL, ?array $csr = null);
 }

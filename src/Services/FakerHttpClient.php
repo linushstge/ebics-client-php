@@ -96,7 +96,7 @@ final class FakerHttpClient implements HttpClientInterface
      *
      * @return Response
      */
-    private function fixtureOrderType(string $orderType, array $options = null): Response
+    private function fixtureOrderType(string $orderType, ?array $options = null): Response
     {
         switch ($orderType) {
             case 'FUL':

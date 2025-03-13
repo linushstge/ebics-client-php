@@ -10,7 +10,7 @@ namespace EbicsApi\Ebics\Builders\Request;
  */
 final class DataTransferBuilderV3 extends DataTransferBuilder
 {
-    public function addDataDigest(string $signatureVersion, string $digest = null): DataTransferBuilder
+    public function addDataDigest(string $signatureVersion, ?string $digest = null): DataTransferBuilder
     {
         $xmlDataDigest = $this->dom->createElement('DataDigest');
         $xmlDataDigest->setAttribute('SignatureVersion', $signatureVersion);

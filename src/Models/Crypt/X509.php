@@ -1043,7 +1043,7 @@ class X509 implements X509Interface
      *
      * @return bool
      */
-    private function removeExtension(string $id, string $path = null): bool
+    private function removeExtension(string $id, ?string $path = null): bool
     {
         $extensions = &$this->extensions($this->currentCert, $path);
 
@@ -1528,7 +1528,7 @@ class X509 implements X509Interface
         }
     }
 
-    final public function setExtension($id, $value, $critical = false, $replace = true, string $path = null): bool
+    final public function setExtension($id, $value, $critical = false, $replace = true, ?string $path = null): bool
     {
         $extensions = &$this->extensions($this->currentCert, $path, true);
 
@@ -1562,7 +1562,7 @@ class X509 implements X509Interface
      *
      * @return array|false
      */
-    private function &extensions(?array &$root, string $path = null, bool $create = false)
+    private function &extensions(?array &$root, ?string $path = null, bool $create = false)
     {
         if (!isset($root)) {
             $root = $this->currentCert;
@@ -1804,7 +1804,7 @@ class X509 implements X509Interface
      *
      * @return mixed
      */
-    private function getExtension(string $id, array $cert = null)
+    private function getExtension(string $id, ?array $cert = null)
     {
         $extensions = $this->extensions($cert);
 
@@ -1876,7 +1876,7 @@ class X509 implements X509Interface
      *
      * @return array|false
      */
-    private function getDNProp(string $propName, array $dn = null, bool $withType = false)
+    private function getDNProp(string $propName, ?array $dn = null, bool $withType = false)
     {
         if (!isset($dn)) {
             $dn = $this->dn;

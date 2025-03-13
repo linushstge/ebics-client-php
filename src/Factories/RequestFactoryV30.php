@@ -388,7 +388,7 @@ final class RequestFactoryV30 extends RequestFactory
         return $this->createBTU($transaction, $context);
     }
 
-    public function prepareDownloadContext(RequestContext $requestContext = null): RequestContext
+    public function prepareDownloadContext(?RequestContext $requestContext = null): RequestContext
     {
         $requestContext = $this->prepareStandardContext($requestContext);
         if (null === $requestContext->getBTDContext()) {
@@ -400,7 +400,7 @@ final class RequestFactoryV30 extends RequestFactory
         return $requestContext;
     }
 
-    public function prepareUploadContext(RequestContext $requestContext = null): RequestContext
+    public function prepareUploadContext(?RequestContext $requestContext = null): RequestContext
     {
         $requestContext = $this->prepareStandardContext($requestContext);
         if (null === $requestContext->getBTUContext()) {

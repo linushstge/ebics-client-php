@@ -62,8 +62,8 @@ abstract class OrderDetailsBuilder
     abstract public function addOrderAttribute(string $orderAttribute): OrderDetailsBuilder;
 
     public function addStandardOrderParams(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null
     ): OrderDetailsBuilder {
         // Add StandardOrderParams to OrderDetails.
         $xmlStandardOrderParams = $this->dom->createElement('StandardOrderParams');

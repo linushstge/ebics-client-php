@@ -27,7 +27,7 @@ abstract class RequestFactoryV2 extends RequestFactory
         throw new LogicException('Method for EBICS 3.0');
     }
 
-    public function prepareDownloadContext(RequestContext $requestContext = null): RequestContext
+    public function prepareDownloadContext(?RequestContext $requestContext = null): RequestContext
     {
         $requestContext = $this->prepareStandardContext($requestContext);
         if (null === $requestContext->getFdlContext()) {
@@ -39,7 +39,7 @@ abstract class RequestFactoryV2 extends RequestFactory
         return $requestContext;
     }
 
-    public function prepareUploadContext(RequestContext $requestContext = null): RequestContext
+    public function prepareUploadContext(?RequestContext $requestContext = null): RequestContext
     {
         $requestContext = $this->prepareStandardContext($requestContext);
         if (null === $requestContext->getFulContext()) {

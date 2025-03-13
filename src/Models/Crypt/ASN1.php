@@ -828,7 +828,7 @@ final class ASN1 implements ASN1Interface
      *
      * @return string|false
      */
-    private function encodeDERInternal($source, array $mapping, string $idx = null, array $special = [])
+    private function encodeDERInternal($source, array $mapping, ?string $idx = null, array $special = [])
     {
         // do not encode (implicitly optional) fields with value set to default
         if (isset($mapping['default']) && $source === $mapping['default']) {

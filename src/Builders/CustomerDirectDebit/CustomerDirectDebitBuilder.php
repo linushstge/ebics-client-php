@@ -49,12 +49,12 @@ final class CustomerDirectDebitBuilder
         string $creditorFinInstBic,
         string $creditorIban,
         string $creditorName,
-        string $creditorId = null,
+        ?string $creditorId = null,
         string $sequenceType = 'FRST',
-        DateTime $collectionDate = null,
+        ?DateTime $collectionDate = null,
         bool $batchBooking = true,
-        string $msgId = null,
-        string $paymentReference = null,
+        ?string $msgId = null,
+        ?string $paymentReference = null,
         string $localInstrument = 'CORE'
     ): CustomerDirectDebitBuilder {
         $this->instance = new CustomerDirectDebit();
@@ -227,8 +227,8 @@ final class CustomerDirectDebitBuilder
         string $currency,
         string $purpose,
         string $mandateReference = '1',
-        DateTime $signatureDate = null,
-        string $endToEndId = null
+        ?DateTime $signatureDate = null,
+        ?string $endToEndId = null
     ): CustomerDirectDebitBuilder {
         $xpath = $this->prepareXPath($this->instance);
         $nbOfTxsList = $xpath->query('//CstmrDrctDbtInitn/PmtInf/NbOfTxs');

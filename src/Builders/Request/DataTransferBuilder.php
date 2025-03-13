@@ -36,7 +36,7 @@ abstract class DataTransferBuilder
         return $this;
     }
 
-    public function addOrderData(string $orderData = null, string $transactionKey = null): DataTransferBuilder
+    public function addOrderData(?string $orderData = null, ?string $transactionKey = null): DataTransferBuilder
     {
         $xmlDataTransfer = $this->dom->createElement('OrderData');
         $this->instance->appendChild($xmlDataTransfer);
@@ -60,7 +60,7 @@ abstract class DataTransferBuilder
         return $this;
     }
 
-    public function addDataEncryptionInfo(Closure $callable = null): DataTransferBuilder
+    public function addDataEncryptionInfo(?Closure $callable = null): DataTransferBuilder
     {
         $dataEncryptionInfoBuilder = new DataEncryptionInfoBuilder($this->cryptService, $this->dom);
         $this->instance->appendChild($dataEncryptionInfoBuilder->createInstance()->getInstance());
@@ -87,7 +87,7 @@ abstract class DataTransferBuilder
         return $this;
     }
 
-    abstract public function addDataDigest(string $signatureVersion, string $digest = null): DataTransferBuilder;
+    abstract public function addDataDigest(string $signatureVersion, ?string $digest = null): DataTransferBuilder;
 
     abstract public function addAdditionalOrderInfo(): DataTransferBuilder;
 

@@ -150,7 +150,7 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws EbicsException
      */
-    public function createUserSignatures(array $options = null): void
+    public function createUserSignatures(?array $options = null): void
     {
         $signatureA = $this->createUserSignature(SignatureInterface::TYPE_A, $options['a_details'] ?? null);
         $this->keyring->setUserSignatureAVersion($options['a_version'] ?? SignatureInterface::A_VERSION6);
@@ -182,7 +182,7 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws EbicsException
      */
-    public function INI(RequestContext $context = null): Response
+    public function INI(?RequestContext $context = null): Response
     {
         $context = $this->requestFactory->prepareStandardContext($context);
         $signatureA = $this->getUserSignature(SignatureInterface::TYPE_A);
@@ -200,7 +200,7 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws EbicsException
      */
-    public function HIA(RequestContext $context = null): Response
+    public function HIA(?RequestContext $context = null): Response
     {
         $context = $this->requestFactory->prepareStandardContext($context);
         $signatureE = $this->getUserSignature(SignatureInterface::TYPE_E);
@@ -220,7 +220,7 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws EbicsException
      */
-    public function H3K(RequestContext $context = null): Response
+    public function H3K(?RequestContext $context = null): Response
     {
         $context = $this->requestFactory->prepareStandardContext($context);
         $signatureA = $this->getUserSignature(SignatureInterface::TYPE_A);
@@ -242,7 +242,7 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws Exceptions\EbicsException
      */
-    public function HPB(RequestContext $context = null): InitializationOrderResult
+    public function HPB(?RequestContext $context = null): InitializationOrderResult
     {
         $context = $this->requestFactory->prepareStandardContext($context);
         $transaction = $this->initializeTransaction(
@@ -265,7 +265,7 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws Exceptions\EbicsException
      */
-    public function SPR(RequestContext $context = null): UploadOrderResult
+    public function SPR(?RequestContext $context = null): UploadOrderResult
     {
         $context = $this->requestFactory->prepareStandardContext($context);
         $context->setOnlyES(true);
@@ -287,7 +287,7 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws Exceptions\EbicsException
      */
-    public function HPD(RequestContext $context = null): DownloadOrderResult
+    public function HPD(?RequestContext $context = null): DownloadOrderResult
     {
         $context = $this->requestFactory->prepareStandardContext($context);
         $transaction = $this->downloadTransaction(
@@ -303,7 +303,7 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws Exceptions\EbicsException
      */
-    public function HKD(RequestContext $context = null): DownloadOrderResult
+    public function HKD(?RequestContext $context = null): DownloadOrderResult
     {
         $context = $this->requestFactory->prepareStandardContext($context);
         $transaction = $this->downloadTransaction(
@@ -319,7 +319,7 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws Exceptions\EbicsException
      */
-    public function HTD(RequestContext $context = null): DownloadOrderResult
+    public function HTD(?RequestContext $context = null): DownloadOrderResult
     {
         $context = $this->requestFactory->prepareStandardContext($context);
         $transaction = $this->downloadTransaction(
@@ -335,7 +335,7 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws Exceptions\EbicsException
      */
-    public function HAA(RequestContext $context = null): DownloadOrderResult
+    public function HAA(?RequestContext $context = null): DownloadOrderResult
     {
         $context = $this->requestFactory->prepareStandardContext($context);
         $transaction = $this->downloadTransaction(
@@ -352,9 +352,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function PTK(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -373,9 +373,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function VMK(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -395,9 +395,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function STA(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -417,9 +417,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function BKA(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -439,9 +439,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function C52(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -461,9 +461,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function C53(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -483,9 +483,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function C54(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -505,9 +505,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function Z52(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -527,9 +527,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function Z53(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -549,9 +549,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function Z54(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -571,9 +571,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function ZSR(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -593,9 +593,9 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsException
      */
     public function XEK(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareDownloadContext($context)
             ->setStartDateTime($startDateTime)
@@ -616,9 +616,9 @@ final class EbicsClient implements EbicsClientInterface
      */
     public function BTD(
         BTDContext $btdContext,
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareStandardContext($context)
             ->setBTDContext($btdContext)
@@ -641,7 +641,7 @@ final class EbicsClient implements EbicsClientInterface
     public function BTU(
         BTUContext $btuContext,
         OrderDataInterface $orderData,
-        RequestContext $context = null
+        ?RequestContext $context = null
     ): UploadOrderResult {
         $context = $this->requestFactory->prepareStandardContext($context)
             ->setBTUContext($btuContext);
@@ -665,9 +665,9 @@ final class EbicsClient implements EbicsClientInterface
      */
     public function FDL(
         FDLContext $fdlContext,
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult {
         $context = $this->requestFactory->prepareStandardContext($context)
             ->setFdlContext($fdlContext)
@@ -691,7 +691,7 @@ final class EbicsClient implements EbicsClientInterface
     public function FUL(
         FULContext $fulContext,
         OrderDataInterface $orderData,
-        RequestContext $context = null
+        ?RequestContext $context = null
     ): UploadOrderResult {
         $context = $this->requestFactory->prepareStandardContext($context)
             ->setFulContext($fulContext);
@@ -716,7 +716,7 @@ final class EbicsClient implements EbicsClientInterface
      */
     public function CCT(
         OrderDataInterface $orderData,
-        RequestContext $context = null
+        ?RequestContext $context = null
     ): UploadOrderResult {
         $context = $this->requestFactory->prepareUploadContext($context);
         $transaction = $this->uploadTransaction(
@@ -739,7 +739,7 @@ final class EbicsClient implements EbicsClientInterface
      */
     public function CDD(
         OrderDataInterface $orderData,
-        RequestContext $context = null
+        ?RequestContext $context = null
     ): UploadOrderResult {
         $context = $this->requestFactory->prepareUploadContext($context);
         $transaction = $this->uploadTransaction(
@@ -762,7 +762,7 @@ final class EbicsClient implements EbicsClientInterface
      */
     public function CDB(
         OrderDataInterface $orderData,
-        RequestContext $context = null
+        ?RequestContext $context = null
     ): UploadOrderResult {
         $context = $this->requestFactory->prepareUploadContext($context);
         $transaction = $this->uploadTransaction(
@@ -785,7 +785,7 @@ final class EbicsClient implements EbicsClientInterface
      */
     public function CIP(
         OrderDataInterface $orderData,
-        RequestContext $context = null
+        ?RequestContext $context = null
     ): UploadOrderResult {
         $context = $this->requestFactory->prepareUploadContext($context);
         $transaction = $this->uploadTransaction(
@@ -808,7 +808,7 @@ final class EbicsClient implements EbicsClientInterface
      */
     public function XE2(
         OrderDataInterface $orderData,
-        RequestContext $context = null
+        ?RequestContext $context = null
     ): UploadOrderResult {
         $context = $this->requestFactory->prepareUploadContext($context);
         $transaction = $this->uploadTransaction(
@@ -831,7 +831,7 @@ final class EbicsClient implements EbicsClientInterface
      */
     public function XE3(
         OrderDataInterface $orderData,
-        RequestContext $context = null
+        ?RequestContext $context = null
     ): UploadOrderResult {
         $context = $this->requestFactory->prepareUploadContext($context);
         $transaction = $this->uploadTransaction(
@@ -852,7 +852,7 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsResponseException
      * @throws EbicsException
      */
-    public function YCT(OrderDataInterface $orderData, RequestContext $context = null): UploadOrderResult
+    public function YCT(OrderDataInterface $orderData, ?RequestContext $context = null): UploadOrderResult
     {
         $context = $this->requestFactory->prepareUploadContext($context);
         $transaction = $this->uploadTransaction(
@@ -873,7 +873,7 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsResponseException
      * @throws EbicsException
      */
-    public function HVU(RequestContext $context = null): DownloadOrderResult
+    public function HVU(?RequestContext $context = null): DownloadOrderResult
     {
         $context = $this->requestFactory->prepareStandardContext($context);
         $transaction = $this->downloadTransaction(
@@ -890,7 +890,7 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsResponseException
      * @throws EbicsException
      */
-    public function HVZ(RequestContext $context = null): DownloadOrderResult
+    public function HVZ(?RequestContext $context = null): DownloadOrderResult
     {
         $context = $this->requestFactory->prepareStandardContext($context);
         $transaction = $this->downloadTransaction(
@@ -906,7 +906,7 @@ final class EbicsClient implements EbicsClientInterface
      * @inheritDoc
      * @throws EbicsException
      */
-    public function HVE(HVEContext $hveContext, RequestContext $context = null): UploadOrderResult
+    public function HVE(HVEContext $hveContext, ?RequestContext $context = null): UploadOrderResult
     {
         $context = $this->requestFactory->prepareStandardContext($context)
             ->setHVEContext($hveContext);
@@ -927,7 +927,7 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsResponseException
      * @throws EbicsException
      */
-    public function HVD(HVDContext $hvdContext, RequestContext $context = null): DownloadOrderResult
+    public function HVD(HVDContext $hvdContext, ?RequestContext $context = null): DownloadOrderResult
     {
         $context = $this->requestFactory->prepareStandardContext($context)
             ->setHVDContext($hvdContext);
@@ -945,7 +945,7 @@ final class EbicsClient implements EbicsClientInterface
      * @throws Exceptions\EbicsResponseException
      * @throws EbicsException
      */
-    public function HVT(HVTContext $hvtContext, RequestContext $context = null): DownloadOrderResult
+    public function HVT(HVTContext $hvtContext, ?RequestContext $context = null): DownloadOrderResult
     {
         $context = $this->requestFactory->prepareStandardContext($context)
             ->setHVTContext($hvtContext);
@@ -1079,7 +1079,7 @@ final class EbicsClient implements EbicsClientInterface
      * @throws EbicsException
      * @throws EbicsResponseException
      */
-    private function downloadTransaction(callable $requestClosure, callable $ackClosure = null): DownloadTransaction
+    private function downloadTransaction(callable $requestClosure, ?callable $ackClosure = null): DownloadTransaction
     {
         $transaction = $this->transactionFactory->createDownloadTransaction();
 
@@ -1320,7 +1320,7 @@ final class EbicsClient implements EbicsClientInterface
      * @return SignatureInterface
      * @throws PasswordEbicsException
      */
-    private function createUserSignature(string $type, array $details = null): SignatureInterface
+    private function createUserSignature(string $type, ?array $details = null): SignatureInterface
     {
         switch ($type) {
             case SignatureInterface::TYPE_A:

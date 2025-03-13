@@ -652,7 +652,7 @@ abstract class RequestFactory
         string $transactionKey,
         string $orderData,
         int $segmentNumber,
-        bool $isLastSegment = null
+        ?bool $isLastSegment = null
     ): Request {
         $context = (new RequestContext())
             ->setBank($this->bank)
@@ -694,7 +694,7 @@ abstract class RequestFactory
     public function createTransferDownload(
         string $transactionId,
         int $segmentNumber,
-        bool $isLastSegment = null
+        ?bool $isLastSegment = null
     ): Request {
         $context = (new RequestContext())
             ->setBank($this->bank)
@@ -1011,7 +1011,7 @@ abstract class RequestFactory
         return $request;
     }
 
-    public function prepareStandardContext(RequestContext $requestContext = null): RequestContext
+    public function prepareStandardContext(?RequestContext $requestContext = null): RequestContext
     {
         if (null === $requestContext) {
             $requestContext = new RequestContext();
@@ -1020,7 +1020,7 @@ abstract class RequestFactory
         return $requestContext;
     }
 
-    abstract public function prepareDownloadContext(RequestContext $requestContext = null): RequestContext;
+    abstract public function prepareDownloadContext(?RequestContext $requestContext = null): RequestContext;
 
-    abstract public function prepareUploadContext(RequestContext $requestContext = null): RequestContext;
+    abstract public function prepareUploadContext(?RequestContext $requestContext = null): RequestContext;
 }

@@ -195,7 +195,7 @@ final class CustomerSwissCreditTransferBuilder
         string $creditorIBAN,
         string $creditorName,
         ?PostalAddressInterface $postalAddress,
-        string $purpose = null
+        ?string $purpose = null
     ): void {
         //agent
         if ($creditorFinInstBIC !== null) {
@@ -250,7 +250,7 @@ final class CustomerSwissCreditTransferBuilder
         ?PostalAddressInterface $postalAddress,
         float $amount,
         string $currency,
-        string $purpose = null
+        ?string $purpose = null
     ): CustomerSwissCreditTransferBuilder {
         if (!in_array($currency, ['CHF', 'EUR'], true)) {
             throw new InvalidArgumentException('The SEPA transaction is restricted to CHF and EUR currency.');
@@ -274,7 +274,7 @@ final class CustomerSwissCreditTransferBuilder
         ?PostalAddressInterface $postalAddress,
         float $amount,
         string $currency,
-        string $purpose = null
+        ?string $purpose = null
     ): CustomerSwissCreditTransferBuilder {
         if ($currency !== 'EUR') {
             throw new InvalidArgumentException('The SEPA transaction is restricted to EUR currency.');
@@ -321,7 +321,7 @@ final class CustomerSwissCreditTransferBuilder
         ?PostalAddressInterface $postalAddress,
         float $amount,
         string $currency,
-        string $purpose = null
+        ?string $purpose = null
     ): CustomerSwissCreditTransferBuilder {
         $xmlCdtTrfTxInf = $this->createCreditTransferTransactionElement($amount);
 
