@@ -26,7 +26,7 @@ final class XmlBuilderV30 extends XmlBuilder
         return $this;
     }
 
-    public function addBody(Closure $callback = null): XmlBuilder
+    public function addBody(?Closure $callback = null): XmlBuilder
     {
         $bodyBuilder = new BodyBuilderV3($this->zipService, $this->cryptService, $this->dom);
         $body = $bodyBuilder->createInstance()->getInstance();

@@ -92,7 +92,7 @@ final class RandomService
      *
      * @return string
      */
-    public function uniqueIdWithDate(string $prefix = null): string
+    public function uniqueIdWithDate(?string $prefix = null): string
     {
         $now = new DateTime();
 

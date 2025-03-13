@@ -64,7 +64,7 @@ final class Keyring
         return $this->version;
     }
 
-    public function setUserSignatureA(SignatureInterface $signature = null): void
+    public function setUserSignatureA(?SignatureInterface $signature = null): void
     {
         $this->userSignatureA = $signature;
     }
@@ -95,7 +95,7 @@ final class Keyring
         return $this->userSignatureAVersion;
     }
 
-    public function setUserSignatureX(SignatureInterface $signature = null): void
+    public function setUserSignatureX(?SignatureInterface $signature = null): void
     {
         $this->userSignatureX = $signature;
     }
@@ -116,7 +116,7 @@ final class Keyring
         return SignatureInterface::X_VERSION2;
     }
 
-    public function setUserSignatureE(SignatureInterface $signature = null): void
+    public function setUserSignatureE(?SignatureInterface $signature = null): void
     {
         $this->userSignatureE = $signature;
     }
@@ -179,7 +179,7 @@ final class Keyring
         return null !== $this->x509Generator;
     }
 
-    public function setBankSignatureX(SignatureInterface $bankSignatureX = null): void
+    public function setBankSignatureX(?SignatureInterface $bankSignatureX = null): void
     {
         $this->bankSignatureX = $bankSignatureX;
     }
@@ -200,7 +200,7 @@ final class Keyring
         return SignatureInterface::X_VERSION2;
     }
 
-    public function setBankSignatureE(SignatureInterface $bankSignatureE = null): void
+    public function setBankSignatureE(?SignatureInterface $bankSignatureE = null): void
     {
         $this->bankSignatureE = $bankSignatureE;
     }

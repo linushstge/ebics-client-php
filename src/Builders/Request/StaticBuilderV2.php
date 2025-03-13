@@ -12,7 +12,7 @@ use Closure;
  */
 final class StaticBuilderV2 extends StaticBuilder
 {
-    public function addOrderDetails(Closure $callable = null): StaticBuilder
+    public function addOrderDetails(?Closure $callable = null): StaticBuilder
     {
         $orderDetailsBuilder = new OrderDetailsBuilderV2($this->dom);
         $this->instance->appendChild($orderDetailsBuilder->createInstance()->getInstance());

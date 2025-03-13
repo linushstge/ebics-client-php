@@ -43,7 +43,7 @@ abstract class AuthSignatureHandler
      *
      * @throws EbicsException
      */
-    public function handle(DOMDocument $request, DOMNode $xmlRequestHeader = null): void
+    public function handle(DOMDocument $request, ?DOMNode $xmlRequestHeader = null): void
     {
         $canonicalizationPath = '//AuthSignature/*';
         $signaturePath = "//*[@authenticate='true']";

@@ -165,7 +165,7 @@ abstract class AbstractEbicsTestCase extends TestCase
         self::assertEquals('011000', $code, $reportText);
     }
 
-    protected function assertExceptionCode(string $code = null)
+    protected function assertExceptionCode(?string $code = null)
     {
         if (null !== $code) {
             $code = (int)$code;

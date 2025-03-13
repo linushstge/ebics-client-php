@@ -91,7 +91,7 @@ final class Pdf extends FPDF
      *
      * @return void
      */
-    public function h(string $text, int $size, int $txtColor = null, int $bgColor = null): void
+    public function h(string $text, int $size, ?int $txtColor = null, ?int $bgColor = null): void
     {
         $this->SetY($this->lastY);
         $this->SetFont($this->sansFont, 'B', $size);
@@ -117,7 +117,7 @@ final class Pdf extends FPDF
      *
      * @return void
      */
-    public function c(string $text, string $style = '', bool $shift = true, int $right = null): void
+    public function c(string $text, string $style = '', bool $shift = true, ?int $right = null): void
     {
         $this->SetY($this->lastY);
         if ($right) {
@@ -133,7 +133,7 @@ final class Pdf extends FPDF
         }
     }
 
-    public function pre(string $text, bool $shift = true, int $right = null): void
+    public function pre(string $text, bool $shift = true, ?int $right = null): void
     {
         $this->SetY($this->lastY);
         if ($right) {

@@ -34,7 +34,7 @@ final class SignatureFactory
      *
      * @return SignatureInterface
      */
-    public function create(string $type, string $publicKey, string $privateKey = null): SignatureInterface
+    public function create(string $type, string $publicKey, ?string $privateKey = null): SignatureInterface
     {
         switch ($type) {
             case SignatureInterface::TYPE_A:
@@ -70,7 +70,7 @@ final class SignatureFactory
      *
      * @return SignatureInterface
      */
-    public function createSignatureE(string $publicKey, string $privateKey = null): SignatureInterface
+    public function createSignatureE(string $publicKey, ?string $privateKey = null): SignatureInterface
     {
         return new Signature(SignatureInterface::TYPE_E, $publicKey, $privateKey);
     }
@@ -81,7 +81,7 @@ final class SignatureFactory
      *
      * @return SignatureInterface
      */
-    public function createSignatureX(string $publicKey, string $privateKey = null): SignatureInterface
+    public function createSignatureX(string $publicKey, ?string $privateKey = null): SignatureInterface
     {
         return new Signature(SignatureInterface::TYPE_X, $publicKey, $privateKey);
     }
@@ -96,7 +96,7 @@ final class SignatureFactory
     public function createSignatureAFromKeys(
         KeyPair $keyPair,
         string $password,
-        X509GeneratorInterface $x509Generator = null
+        ?X509GeneratorInterface $x509Generator = null
     ): SignatureInterface {
         return $this->createSignatureFromKeys($keyPair, $password, SignatureInterface::TYPE_A, $x509Generator);
     }
@@ -111,7 +111,7 @@ final class SignatureFactory
     public function createSignatureEFromKeys(
         KeyPair $keyPair,
         string $password,
-        X509GeneratorInterface $x509Generator = null
+        ?X509GeneratorInterface $x509Generator = null
     ): SignatureInterface {
         return $this->createSignatureFromKeys($keyPair, $password, SignatureInterface::TYPE_E, $x509Generator);
     }
@@ -126,7 +126,7 @@ final class SignatureFactory
     public function createSignatureXFromKeys(
         KeyPair $keyPair,
         string $password,
-        X509GeneratorInterface $x509Generator = null
+        ?X509GeneratorInterface $x509Generator = null
     ): SignatureInterface {
         return $this->createSignatureFromKeys($keyPair, $password, SignatureInterface::TYPE_X, $x509Generator);
     }
@@ -169,7 +169,7 @@ final class SignatureFactory
         KeyPair $keyPair,
         string $password,
         string $type,
-        X509GeneratorInterface $x509Generator = null
+        ?X509GeneratorInterface $x509Generator = null
     ): SignatureInterface {
         $signature = new Signature($type, $keyPair->getPublicKey(), $keyPair->getPrivateKey());
 

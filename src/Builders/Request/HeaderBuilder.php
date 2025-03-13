@@ -40,7 +40,7 @@ abstract class HeaderBuilder
 
     abstract public function addStatic(Closure $callback): HeaderBuilder;
 
-    public function addMutable(Closure $callable = null): HeaderBuilder
+    public function addMutable(?Closure $callable = null): HeaderBuilder
     {
         $mutableBuilder = new MutableBuilder($this->dom);
         $this->instance->appendChild($mutableBuilder->createInstance()->getInstance());

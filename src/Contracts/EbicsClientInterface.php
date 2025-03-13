@@ -38,7 +38,7 @@ interface EbicsClientInterface
      * @param array|null $options Setup to specify custom certificate, private_key and version
      * for Electronic Signature, Authorization and Identification, Encryption details.
      */
-    public function createUserSignatures(array $options = null): void;
+    public function createUserSignatures(?array $options = null): void;
 
     /**
      * Download supported protocol versions for the Bank.
@@ -55,7 +55,7 @@ interface EbicsClientInterface
      *
      * @return Response
      */
-    public function INI(RequestContext $context = null): Response;
+    public function INI(?RequestContext $context = null): Response;
 
     /**
      * Make HIA request.
@@ -65,7 +65,7 @@ interface EbicsClientInterface
      *
      * @return Response
      */
-    public function HIA(RequestContext $context = null): Response;
+    public function HIA(?RequestContext $context = null): Response;
 
     /**
      * Make H3K request.
@@ -75,7 +75,7 @@ interface EbicsClientInterface
      *
      * @return Response
      */
-    public function H3K(RequestContext $context = null): Response;
+    public function H3K(?RequestContext $context = null): Response;
 
     /**
      * Download the Bank public signatures authentication (X002) and encryption (E002).
@@ -85,7 +85,7 @@ interface EbicsClientInterface
      *
      * @return InitializationOrderResult
      */
-    public function HPB(RequestContext $context = null): InitializationOrderResult;
+    public function HPB(?RequestContext $context = null): InitializationOrderResult;
 
     /**
      * Suspend activated Keyring.
@@ -94,7 +94,7 @@ interface EbicsClientInterface
      *
      * @return UploadOrderResult
      */
-    public function SPR(RequestContext $context = null): UploadOrderResult;
+    public function SPR(?RequestContext $context = null): UploadOrderResult;
 
     /**
      * Download the bank server parameters.
@@ -103,7 +103,7 @@ interface EbicsClientInterface
      *
      * @return DownloadOrderResult
      */
-    public function HPD(RequestContext $context = null): DownloadOrderResult;
+    public function HPD(?RequestContext $context = null): DownloadOrderResult;
 
     /**
      * Download customer's customer and subscriber information.
@@ -112,7 +112,7 @@ interface EbicsClientInterface
      *
      * @return DownloadOrderResult
      */
-    public function HKD(RequestContext $context = null): DownloadOrderResult;
+    public function HKD(?RequestContext $context = null): DownloadOrderResult;
 
     /**
      * Download subscriber's customer and subscriber information.
@@ -121,7 +121,7 @@ interface EbicsClientInterface
      *
      * @return DownloadOrderResult
      */
-    public function HTD(RequestContext $context = null): DownloadOrderResult;
+    public function HTD(?RequestContext $context = null): DownloadOrderResult;
 
     /**
      * Download Bank available order types.
@@ -130,7 +130,7 @@ interface EbicsClientInterface
      *
      * @return DownloadOrderResult
      */
-    public function HAA(RequestContext $context = null): DownloadOrderResult;
+    public function HAA(?RequestContext $context = null): DownloadOrderResult;
 
     /**
      * Download transaction status.
@@ -142,9 +142,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function PTK(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -157,9 +157,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function VMK(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -172,9 +172,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function STA(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -187,9 +187,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function BKA(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -202,9 +202,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function C52(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -217,9 +217,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function C53(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -232,9 +232,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function C54(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -247,9 +247,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function Z52(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -262,9 +262,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function Z53(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -277,9 +277,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function Z54(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -292,9 +292,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function ZSR(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -307,9 +307,9 @@ interface EbicsClientInterface
      * @return DownloadOrderResult
      */
     public function XEK(
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -324,9 +324,9 @@ interface EbicsClientInterface
      */
     public function BTD(
         BTDContext $btdContext,
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -341,7 +341,7 @@ interface EbicsClientInterface
     public function BTU(
         BTUContext $btuContext,
         OrderDataInterface $orderData,
-        RequestContext $context = null
+        ?RequestContext $context = null
     ): UploadOrderResult;
 
     /**
@@ -356,9 +356,9 @@ interface EbicsClientInterface
      */
     public function FDL(
         FDLContext $fdlContext,
-        DateTimeInterface $startDateTime = null,
-        DateTimeInterface $endDateTime = null,
-        RequestContext $context = null
+        ?DateTimeInterface $startDateTime = null,
+        ?DateTimeInterface $endDateTime = null,
+        ?RequestContext $context = null
     ): DownloadOrderResult;
 
     /**
@@ -374,7 +374,7 @@ interface EbicsClientInterface
     public function FUL(
         FULContext $fulContext,
         OrderDataInterface $orderData,
-        RequestContext $context = null
+        ?RequestContext $context = null
     ): UploadOrderResult;
 
     /**
@@ -389,7 +389,7 @@ interface EbicsClientInterface
      *
      * @return UploadOrderResult
      */
-    public function CCT(OrderDataInterface $orderData, RequestContext $context = null): UploadOrderResult;
+    public function CCT(OrderDataInterface $orderData, ?RequestContext $context = null): UploadOrderResult;
 
     /**
      * Upload initiation of the direct debit transaction.
@@ -402,7 +402,7 @@ interface EbicsClientInterface
      *
      * @return UploadOrderResult
      */
-    public function CDD(OrderDataInterface $orderData, RequestContext $context = null): UploadOrderResult;
+    public function CDD(OrderDataInterface $orderData, ?RequestContext $context = null): UploadOrderResult;
 
     /**
      * Upload initiation of the direct debit transaction for business.
@@ -415,7 +415,7 @@ interface EbicsClientInterface
      *
      * @return UploadOrderResult
      */
-    public function CDB(OrderDataInterface $orderData, RequestContext $context = null): UploadOrderResult;
+    public function CDB(OrderDataInterface $orderData, ?RequestContext $context = null): UploadOrderResult;
 
     /**
      * Upload initiation of the instant credit transfer per SEPA.
@@ -425,7 +425,7 @@ interface EbicsClientInterface
      *
      * @return UploadOrderResult
      */
-    public function CIP(OrderDataInterface $orderData, RequestContext $context = null): UploadOrderResult;
+    public function CIP(OrderDataInterface $orderData, ?RequestContext $context = null): UploadOrderResult;
 
     /**
      * Upload initiation credit transfer per Swiss Payments specification set by Six banking services.
@@ -438,7 +438,7 @@ interface EbicsClientInterface
      *
      * @return UploadOrderResult
      */
-    public function XE2(OrderDataInterface $orderData, RequestContext $context = null): UploadOrderResult;
+    public function XE2(OrderDataInterface $orderData, ?RequestContext $context = null): UploadOrderResult;
 
     /**
      * Upload SEPA Direct Debit Initiation, CH definitions, CORE.
@@ -450,7 +450,7 @@ interface EbicsClientInterface
      *
      * @return UploadOrderResult
      */
-    public function XE3(OrderDataInterface $orderData, RequestContext $context = null): UploadOrderResult;
+    public function XE3(OrderDataInterface $orderData, ?RequestContext $context = null): UploadOrderResult;
 
     /**
      * Upload Credit transfer CGI (SEPA & non SEPA).
@@ -461,7 +461,7 @@ interface EbicsClientInterface
      *
      * @return UploadOrderResult
      */
-    public function YCT(OrderDataInterface $orderData, RequestContext $context = null): UploadOrderResult;
+    public function YCT(OrderDataInterface $orderData, ?RequestContext $context = null): UploadOrderResult;
 
     /**
      * Download List the orders for which the user is authorized as a signatory.
@@ -470,7 +470,7 @@ interface EbicsClientInterface
      *
      * @return DownloadOrderResult
      */
-    public function HVU(RequestContext $context = null): DownloadOrderResult;
+    public function HVU(?RequestContext $context = null): DownloadOrderResult;
 
     /**
      * Download VEU overview with additional information.
@@ -479,7 +479,7 @@ interface EbicsClientInterface
      *
      * @return DownloadOrderResult
      */
-    public function HVZ(RequestContext $context = null): DownloadOrderResult;
+    public function HVZ(?RequestContext $context = null): DownloadOrderResult;
 
     /**
      * Add a VEU signature for order.
@@ -489,7 +489,7 @@ interface EbicsClientInterface
      *
      * @return UploadOrderResult
      */
-    public function HVE(HVEContext $hveContext, RequestContext $context = null): UploadOrderResult;
+    public function HVE(HVEContext $hveContext, ?RequestContext $context = null): UploadOrderResult;
 
     /**
      * Download the state of a VEU order.
@@ -499,7 +499,7 @@ interface EbicsClientInterface
      *
      * @return DownloadOrderResult
      */
-    public function HVD(HVDContext $hvdContext, RequestContext $context = null): DownloadOrderResult;
+    public function HVD(HVDContext $hvdContext, ?RequestContext $context = null): DownloadOrderResult;
 
     /**
      * Download detailed information about an order from VEU processing for which the user is authorized as a signatory.
@@ -509,7 +509,7 @@ interface EbicsClientInterface
      *
      * @return DownloadOrderResult
      */
-    public function HVT(HVTContext $hvtContext, RequestContext $context = null): DownloadOrderResult;
+    public function HVT(HVTContext $hvtContext, ?RequestContext $context = null): DownloadOrderResult;
 
     /**
      * Get Keyring.
