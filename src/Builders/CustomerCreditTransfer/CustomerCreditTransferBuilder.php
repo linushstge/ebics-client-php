@@ -45,6 +45,7 @@ final class CustomerCreditTransferBuilder
      * least for 15 days. Used for rejecting duplicated transactions (max length: 35 characters)
      * @param string|null $paymentReference Overwrite default payment reference -
      * visible on creditors bank statement (max length: 35 characters)
+     * @param string|null $chargeBearer Overwrite default charge bearer (one of SLEV, CRED, DEBT, SHAR)
      *
      * @return $this
      */
@@ -56,7 +57,8 @@ final class CustomerCreditTransferBuilder
         ?DateTime $executionDate = null,
         bool $batchBooking = true,
         ?string $msgId = null,
-        ?string $paymentReference = null
+        ?string $paymentReference = null,
+        ?string $chargeBearer = null
     ): CustomerCreditTransferBuilder {
         $this->instance = new CustomerCreditTransfer();
         $now = new DateTime();
@@ -183,7 +185,11 @@ final class CustomerCreditTransferBuilder
         $xmlFinInstnId->appendChild($xmlBIC);
 
         $xmlChrgBr = $this->instance->createElement('ChrgBr');
-        $xmlChrgBr->nodeValue = 'SLEV';
+        if ($chargeBearer) {
+            $xmlChrgBr->nodeValue = $chargeBearer;
+        } else {
+            $xmlChrgBr->nodeValue = 'SLEV';
+        }
         $xmlPmtInf->appendChild($xmlChrgBr);
 
         return $this;
@@ -334,7 +340,8 @@ final class CustomerCreditTransferBuilder
         ?PostalAddressInterface $postalAddress,
         float $amount,
         string $currency,
-        ?string $purpose = null
+        ?string $purpose = null,
+        ?string $chargeBearer = null
     ): CustomerCreditTransferBuilder {
         if ($currency !== 'EUR') {
             throw new InvalidArgumentException('The SEPA transaction is restricted to EUR currency.');
@@ -356,7 +363,11 @@ final class CustomerCreditTransferBuilder
         $this->addAmountElement($xmlCdtTrfTxInf, $amount, $currency);
 
         $xmlChrgBr = $this->instance->createElement('ChrgBr');
-        $xmlChrgBr->nodeValue = 'SLEV';
+        if ($chargeBearer) {
+            $xmlChrgBr->nodeValue = $chargeBearer;
+        } else {
+            $xmlChrgBr->nodeValue = 'SLEV';
+        }
         $xmlCdtTrfTxInf->appendChild($xmlChrgBr);
 
         $this->addCreditor(
