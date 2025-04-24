@@ -30,7 +30,11 @@ jobs:
     # would always fail in forks
     if: github.repository == 'ebics-api/ebics-client-php'
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout PR code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -48,7 +52,11 @@ jobs:
     # would always fail in forks
     if: github.repository == 'ebics-api/ebics-client-php'
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout PR code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -66,7 +74,11 @@ jobs:
     # would always fail in forks
     if: github.repository == 'ebics-api/ebics-client-php'
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout PR code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -75,7 +87,7 @@ jobs:
         run: composer install --no-scripts --no-progress --ansi
       - name: Prepare data
         run: unzip -P "$PASSWORD" ./tests/_data.zip -d .
-      - name: Run phpunit
         env:
             PASSWORD: ${{ secrets.PWD }}
+      - name: Run phpunit
         run: composer code-test
