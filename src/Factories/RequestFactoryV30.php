@@ -273,7 +273,7 @@ final class RequestFactoryV30 extends RequestFactory
         /**
          * EBICS 3.0 does not support Service Option "XQRR" in camt.054 version 04.
          */
-        if($btdContext->getMsgNameVersion() !== "04") {
+        if ($btdContext->getMsgNameVersion() !== "04") {
             $btdContext->setServiceOption('XQRR');
         }
 
