@@ -269,7 +269,13 @@ final class RequestFactoryV30 extends RequestFactory
         $btdContext->setServiceName('REP');
         $btdContext->setMsgName('camt.054');
         $btdContext->setContainerType('ZIP');
-        $btdContext->setServiceOption('XQRR');
+
+        /**
+         * EBICS 3.0 does not support Service Option "XQRR" in camt.054 version 04.
+         */
+        if($btdContext->getMsgNameVersion() !== "04") {
+            $btdContext->setServiceOption('XQRR');
+        }
 
         return $this->createBTD($context);
     }
