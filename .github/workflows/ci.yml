@@ -74,7 +74,7 @@ jobs:
       - name: Composer Install
         run: composer install --no-scripts --no-progress --ansi
       - name: Prepare data
-        run: unzip -P ${{ secrets.PWD }} ./tests/_data.zip -d .
+        run: unzip -P "$PASSWORD" ./tests/_data.zip -d .
       - name: Run phpunit
         env:
             PASSWORD: ${{ secrets.PWD }}
