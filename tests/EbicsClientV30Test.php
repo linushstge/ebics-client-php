@@ -1035,7 +1035,7 @@ class EbicsClientV30Test extends AbstractEbicsTestCase
                     'C52' => ['code' => '091005', 'fake' => false],
                     'C53' => ['code' => '090005', 'fake' => false],
                     'C54' => ['code' => '090005', 'fake' => false],
-                    'Z54' => ['code' => '091005', 'fake' => false, 'params' => ['mnv' => '04', 's' => 'CH']],
+                    'Z54' => ['code' => '090005', 'fake' => false, 'params' => ['mnv' => '04', 's' => 'CH']],
                     'ZSR' => ['code' => '091005', 'fake' => false],
                     'XEK' => ['code' => '091005', 'fake' => false],
                     'BTD' => ['code' => '090005', 'fake' => false],
