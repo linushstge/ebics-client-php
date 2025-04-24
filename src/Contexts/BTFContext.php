@@ -14,6 +14,8 @@ abstract class BTFContext extends ServiceContext
     private ?string $msgNameVariant = null;
     private ?string $msgNameVersion = null;
     private ?string $msgNameFormat = null;
+    private bool $signatureFlag = false;
+    private bool $signatureFlagEds = false;
 
     public function setContainerFlag(string $containerFlag): self
     {
@@ -61,5 +63,29 @@ abstract class BTFContext extends ServiceContext
     public function getMsgNameFormat(): ?string
     {
         return $this->msgNameFormat;
+    }
+
+    public function setSignatureFlag(bool $signatureFlag): self
+    {
+        $this->signatureFlag = $signatureFlag;
+
+        return $this;
+    }
+
+    public function getSignatureFlag(): bool
+    {
+        return $this->signatureFlag;
+    }
+
+    public function setSignatureFlagEds(bool $signatureFlagEds): self
+    {
+        $this->signatureFlagEds = $signatureFlagEds;
+
+        return $this;
+    }
+
+    public function getSignatureFlagEds(): bool
+    {
+        return $this->signatureFlagEds;
     }
 }

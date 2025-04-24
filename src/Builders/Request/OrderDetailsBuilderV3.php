@@ -192,6 +192,16 @@ final class OrderDetailsBuilderV3 extends OrderDetailsBuilder
             );
         }
 
+        if (true === $btuContext->getSignatureFlag()) {
+            $xmlSignatureFlag = $this->dom->createElement('SignatureFlag');
+
+            if (true === $btuContext->getSignatureFlagEds()) {
+                $xmlSignatureFlag->setAttribute('requestEDS', 'true');
+            }
+
+            $xmlBTUOrderParams->appendChild($xmlSignatureFlag);
+        }
+
         return $this;
     }
 
