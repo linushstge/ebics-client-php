@@ -16,6 +16,7 @@ use EbicsApi\Ebics\Models\StructuredPostalAddress;
 use EbicsApi\Ebics\Models\UnstructuredPostalAddress;
 use EbicsApi\Ebics\Models\User;
 use EbicsApi\Ebics\Models\X509\BankX509Generator;
+use EbicsApi\Ebics\Services\DebuggerHttpClient;
 use EbicsApi\Ebics\Services\FakerHttpClient;
 use EbicsApi\Ebics\Services\FileKeyringManager;
 use PHPUnit\Framework\TestCase;
@@ -29,35 +30,39 @@ use RuntimeException;
  */
 abstract class AbstractEbicsTestCase extends TestCase
 {
-    protected $data = __DIR__.'/_data';
+    protected $data = __DIR__ . '/_data';
 
-    protected $fixtures = __DIR__.'/_fixtures';
+    protected $fixtures = __DIR__ . '/_fixtures';
 
     protected function setupClientV24(
         int $credentialsId,
-        $fake = false
+        bool $fake = false,
+        bool $debug = false
     ): EbicsClientInterface {
-        return $this->setupClient(Keyring::VERSION_24, $credentialsId, $fake);
+        return $this->setupClient(Keyring::VERSION_24, $credentialsId, $fake, $debug);
     }
 
     protected function setupClientV25(
         int $credentialsId,
-        $fake = false
+        bool $fake = false,
+        bool $debug = false
     ): EbicsClientInterface {
-        return $this->setupClient(Keyring::VERSION_25, $credentialsId, $fake);
+        return $this->setupClient(Keyring::VERSION_25, $credentialsId, $fake, $debug);
     }
 
     protected function setupClientV30(
         int $credentialsId,
-        bool $fake = false
+        bool $fake = false,
+        bool $debug = false
     ): EbicsClientInterface {
-        return $this->setupClient(Keyring::VERSION_30, $credentialsId, $fake);
+        return $this->setupClient(Keyring::VERSION_30, $credentialsId, $fake, $debug);
     }
 
     private function setupClient(
         string $version,
         int $credentialsId,
-        bool $fake = false
+        bool $fake = false,
+        bool $debug = false
     ): EbicsClientInterface {
         $credentials = $this->credentialsDataProvider($credentialsId);
 
@@ -79,6 +84,9 @@ abstract class AbstractEbicsTestCase extends TestCase
         $options = [];
         if (true === $fake) {
             $options['http_client'] = new FakerHttpClient($this->fixtures);
+        }
+        if (true === $debug) {
+            $options['http_client'] = new DebuggerHttpClient();
         }
 
         $ebicsClient = new EbicsClient($bank, $user, $keyring, $options);
@@ -113,7 +121,7 @@ abstract class AbstractEbicsTestCase extends TestCase
 
     protected function setupKeys(Keyring $keyring)
     {
-        $keys = json_decode(file_get_contents($this->fixtures.'/keys.json'));
+        $keys = json_decode(file_get_contents($this->fixtures . '/keys.json'));
         $keyring->setPassword('mysecret');
         $signatureFactory = new SignatureFactory();
 

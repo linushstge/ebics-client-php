@@ -5,6 +5,7 @@ namespace EbicsApi\Ebics\Tests;
 use DateTime;
 use EbicsApi\Ebics\Contexts\FDLContext;
 use EbicsApi\Ebics\Contexts\FULContext;
+use EbicsApi\Ebics\Exceptions\DebuggerException;
 use EbicsApi\Ebics\Exceptions\InvalidUserOrUserStateException;
 use EbicsApi\Ebics\Factories\DocumentFactory;
 use Silarhi\Cfonb\CfonbParser;
@@ -39,6 +40,25 @@ class EbicsClientV24Test extends AbstractEbicsTestCase
         $code = $responseHandler->retrieveH000ReturnCode($hev);
         $reportText = $responseHandler->retrieveH000ReportText($hev);
         $this->assertResponseOk($code, $reportText);
+    }
+
+    /**
+     * @dataProvider serversDataProvider
+     *
+     * @group HEV
+     * @group HEV-V24
+     *
+     * @param int $credentialsId
+     * @param array $codes
+     *
+     * @covers
+     */
+    public function testHEVDebug(int $credentialsId, array $codes)
+    {
+        $client = $this->setupClientV24($credentialsId, $codes['HEV']['fake'], true);
+
+        $this->expectException(DebuggerException::class);
+        $client->HEV();
     }
 
     /**
@@ -125,8 +145,12 @@ class EbicsClientV24Test extends AbstractEbicsTestCase
         $hpb = $client->HPB();
 
         $responseHandler = $client->getResponseHandler();
-        $code = $responseHandler->retrieveH00XReturnCode($hpb->getTransaction()->getInitializationSegment()->getResponse());
-        $reportText = $responseHandler->retrieveH00XReportText($hpb->getTransaction()->getInitializationSegment()->getResponse());
+        $code = $responseHandler->retrieveH00XReturnCode(
+            $hpb->getTransaction()->getInitializationSegment()->getResponse()
+        );
+        $reportText = $responseHandler->retrieveH00XReportText(
+            $hpb->getTransaction()->getInitializationSegment()->getResponse()
+        );
         $this->assertResponseOk($code, $reportText);
         $this->saveKeyring($credentialsId, $client->getKeyring());
     }
@@ -174,7 +198,9 @@ class EbicsClientV24Test extends AbstractEbicsTestCase
 
             $responseHandler = $client->getResponseHandler();
             $code = $responseHandler->retrieveH00XReturnCode($fdl->getTransaction()->getLastSegment()->getResponse());
-            $reportText = $responseHandler->retrieveH00XReportText($fdl->getTransaction()->getLastSegment()->getResponse());
+            $reportText = $responseHandler->retrieveH00XReportText(
+                $fdl->getTransaction()->getLastSegment()->getResponse()
+            );
             $this->assertResponseOk($code, $reportText);
 
             $code = $responseHandler->retrieveH00XReturnCode($fdl->getTransaction()->getReceipt());
@@ -215,11 +241,17 @@ class EbicsClientV24Test extends AbstractEbicsTestCase
 
             $responseHandler = $client->getResponseHandler();
             $code = $responseHandler->retrieveH00XReturnCode($ful->getTransaction()->getLastSegment()->getResponse());
-            $reportText = $responseHandler->retrieveH00XReportText($ful->getTransaction()->getLastSegment()->getResponse());
+            $reportText = $responseHandler->retrieveH00XReportText(
+                $ful->getTransaction()->getLastSegment()->getResponse()
+            );
             $this->assertResponseOk($code, $reportText);
 
-            $code = $responseHandler->retrieveH00XReturnCode($ful->getTransaction()->getInitialization()->getResponse());
-            $reportText = $responseHandler->retrieveH00XReportText($ful->getTransaction()->getInitialization()->getResponse());
+            $code = $responseHandler->retrieveH00XReturnCode(
+                $ful->getTransaction()->getInitialization()->getResponse()
+            );
+            $reportText = $responseHandler->retrieveH00XReportText(
+                $ful->getTransaction()->getInitialization()->getResponse()
+            );
 
             $this->assertResponseOk($code, $reportText);
         }

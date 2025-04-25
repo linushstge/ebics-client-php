@@ -6,6 +6,12 @@ use EbicsApi\Ebics\Contracts\EbicsResponseExceptionInterface;
 use EbicsApi\Ebics\Models\Http\Request;
 use EbicsApi\Ebics\Models\Http\Response;
 
+/**
+ * EbicsResponseException abstract class representation.
+ *
+ * @license http://www.opensource.org/licenses/mit-license.html  MIT License
+ * @author Andrew Svirin
+ */
 abstract class EbicsResponseException extends EbicsException implements EbicsResponseExceptionInterface
 {
     private string $responseCode;
