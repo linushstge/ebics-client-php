@@ -10,7 +10,7 @@
 PHP library to communicate with a bank through <a href="https://en.wikipedia.org/wiki/Electronic_Banking_Internet_Communication_Standard" target="_blank">EBICS</a> protocol.  
 PHP EBICS Client - https://ebics-api.github.io/ebics-client-php/  
 Supported PHP versions - PHP 7.2 and higher  
-Support EBICS versions: 2.4, 2.5, 3.0; Encryption versions: E002, X002, A005, A006; Switching EBICS T/TS
+Supported EBICS versions: 2.4, 2.5, 3.0; Encryption versions: E002, X002, A005, A006; Switching EBICS T/TS
 
 # 💥 (Premium) EBICS API Client
 
