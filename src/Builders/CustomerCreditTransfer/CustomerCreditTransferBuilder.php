@@ -350,7 +350,15 @@ final class CustomerCreditTransferBuilder
 
         $this->addAmountElement($xmlCdtTrfTxInf, $amount, $currency);
 
-        $this->addCreditor($xmlCdtTrfTxInf, null, $creditorIBAN, $creditorName, $postalAddress, $purposeText, $purposeCode);
+        $this->addCreditor(
+            $xmlCdtTrfTxInf,
+            null,
+            $creditorIBAN,
+            $creditorName,
+            $postalAddress,
+            $purposeText,
+            $purposeCode
+        );
 
         return $this;
     }
